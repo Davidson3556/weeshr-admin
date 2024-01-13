@@ -1,6 +1,6 @@
 # weeshr_admin
 
-This template should help get you started developing with Vue 3 in Vite.
+This Weeshr Admin is used to manage the Weeshr back office 
 
 ## Recommended IDE Setup
 
@@ -44,3 +44,12 @@ npm run build
 ```sh
 npm run lint
 ```
+
+
+### Packages 
+1. Vite engine with Vue
+2. tailwind css for styling 
+2. Shadcn-vue for ui library 
+3. vee-validate/zod for form validation
+4. pinia for state management
+5. lucide-vue-next for icons.
