@@ -2,7 +2,6 @@
 import Overview from '@/components/UseOverview.vue'
 import DateRangePicker from '@/components/DateRangePicker.vue'
 import MainNav from '@/components/MainNav.vue'
-import RecentSales from '@/components/RecentSales.vue'
 import Search from '@/components/UseSearch.vue'
 import UserNav from '@/components/UserNav.vue'
 
@@ -188,7 +187,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <RecentSales />
               </CardContent>
             </Card>
           </div>

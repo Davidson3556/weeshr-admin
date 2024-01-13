@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/lib/registry/avatar'
+
 </script>
 
 <template>
