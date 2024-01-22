@@ -18,6 +18,12 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue')
     },
 
+    {
+      path: '/errorpage',
+      name: 'error',
+      component: () => import('../views/Errorpage404.vue')
+    }
+
   ]
 })
 
