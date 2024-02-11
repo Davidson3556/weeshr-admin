@@ -1,3 +1,4 @@
+
 <template>
   <div class="container mx-auto p-4">
     <div class="flex items-center justify-between mb-4">
@@ -51,20 +52,21 @@
 
 
   
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   data() {
     return {
       roles: [
         { id: 1, roleName: 'Super Admin' },
         { id: 2, roleName: 'Admin' },
         { id: 3, roleName: 'Editor' },
-
       ],
       selectedRole: 1,
       resources: [
         { resourceName: 'View Employees', read: false, create: false, update: false, delete: false },
-        { resourceName: 'View Subcription History', read: false, create: false, update: false, delete: false },
+        { resourceName: 'View Subscription History', read: false, create: false, update: false, delete: false },
         { resourceName: 'View Warehouse Zone', read: false, create: false, update: false, delete: false },
         { resourceName: 'View Warehouse Bin Location', read: false, create: false, update: false, delete: false },
         { resourceName: 'View Inventory Items', read: false, create: false, update: false, delete: false },
@@ -76,12 +78,11 @@ export default {
     };
   },
   methods: {
-    assignPermissions() {
-
-      // Implement logic to assign permissions
+    assignPermissions(): void {
+      // Implement logic to assign permissions here
       console.log('Permissions assigned!');
     },
   },
-};
+});
 </script>
 
