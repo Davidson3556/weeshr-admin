@@ -38,7 +38,7 @@ import { cn } from '@/lib/utils'
       aria-disabled="true"
       class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
     >
-    <a href="/permissionpage" >Permission</a>
+    <a href="/permissionpage">Permission</a>
     </a> 
        
     
