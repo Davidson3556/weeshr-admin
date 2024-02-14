@@ -52,7 +52,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
         </TabsList>
         <TabsContent value="overview" class="space-y-4">
   <div class="grid grid-cols-2 gap-4">
-    <!-- First Grid Item -->
+    
     <div class="bg-white p-4 rounded shadow">
       <label class="flex items-center space-x-2">
         <input type="checkbox" class="form-checkbox">
@@ -64,7 +64,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
       </p>
     </div>
 
-    <!-- Second Grid Item -->
     <div class="bg-white p-4 rounded shadow">
       <label class="flex items-center space-x-2">
         <input type="checkbox" class="form-checkbox">
