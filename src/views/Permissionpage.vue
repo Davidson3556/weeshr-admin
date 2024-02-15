@@ -51,105 +51,89 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
           </TabsTrigger>
         </TabsList>
         <TabsContent value="overview" class="space-y-4">
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-2 ">
+    
+   
+
+    <div class="bg-white p-4 rounded shadow">
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" class="form-checkbox">
+        <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">History</span>
+      </label>
+      <p class="text-gray-600 mt-2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+      </p>
+    </div>
+
+    <div class="bg-white p-4 rounded shadow">
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" class="form-checkbox">
+        <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">Subcription Historty</span>
+      </label>
+      <p class="text-gray-600 mt-2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+      </p>
+    </div>
+
     
     <div class="bg-white p-4 rounded shadow">
       <label class="flex items-center space-x-2">
         <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Employees</span>
-        
+        <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">View Inventory Items</span>
       </label>
       <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
       </p>
     </div>
 
     <div class="bg-white p-4 rounded shadow">
       <label class="flex items-center space-x-2">
         <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Subscription History</span>
+        <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">View Roles</span>
       </label>
       <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+      </p>
+    </div>
+
+    <div class="bg-white p-4 rounded shadow">
+  <label class="flex items-center space-x-2">
+    <input type="checkbox" class="form-checkbox">
+    <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">View Employees</span>
+  </label>
+  <p class="text-gray-600 mt-2">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+  </p>
+</div>
+
+
+    <div class="bg-white p-4 rounded shadow">
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" class="form-checkbox">
+        <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">View Inventory Items</span>
+      </label>
+      <p class="text-gray-600 mt-2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
       </p>
     </div>
 
     <div class="bg-white p-4 rounded shadow">
       <label class="flex items-center space-x-2">
         <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View warehouse Zone</span>
+        <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">View Inventory Items</span>
       </label>
       <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
       </p>
     </div>
 
     <div class="bg-white p-4 rounded shadow">
       <label class="flex items-center space-x-2">
         <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View warehouse zone</span>
+        <span class="text-gray-700 md:text-lg lg:text-xl font-bold text-center md:block lg:inline-block">View Roles</span>
       </label>
       <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
-      </p>
-    </div>
-    <div class="bg-white p-4 rounded shadow">
-      <label class="flex items-center space-x-2">
-        <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Warehouse Bin Location</span>
-      </label>
-      <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
-      </p>
-    </div>
-
-    <div class="bg-white p-4 rounded shadow">
-      <label class="flex items-center space-x-2">
-        <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Inventory Items</span>
-      </label>
-      <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
-      </p>
-    </div>
-
-    <div class="bg-white p-4 rounded shadow">
-      <label class="flex items-center space-x-2">
-        <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Warehouse Bin Location</span>
-      </label>
-      <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
-      </p>
-    </div>
-
-    <div class="bg-white p-4 rounded shadow">
-      <label class="flex items-center space-x-2">
-        <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Inventory Items</span>
-      </label>
-      <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
-      </p>
-    </div>
-
-    <div class="bg-white p-4 rounded shadow">
-      <label class="flex items-center space-x-2">
-        <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Roles</span>
-      </label>
-      <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
-      </p>
-    </div>
-
-    <div class="bg-white p-4 rounded shadow">
-      <label class="flex items-center space-x-2">
-        <input type="checkbox" class="form-checkbox">
-        <span class="text-gray-700">View Roles</span>
-      </label>
-      <p class="text-gray-600 mt-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
       </p>
     </div>
 
