@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import Errorpage404 from '../views/Errorpage.vue'
-import Permissionpage from '../views/Permissionpage.vue'
 
 const routes = [
   {
@@ -15,26 +14,19 @@ const routes = [
     name: 'login',
     component: LoginView
   },
-  {
-    path: '/permissionpage',
-    name: 'permission',
-    component: Permissionpage
-  },
+  
   {
     path: '/errorpage',
     name: 'error',
     component: Errorpage404
   },
-
-  
+ 
   // Added the wildcard route for handling 404 errors here
   {
     path: '/:catchAll(.*)',
     name: 'not-found',
     component: Errorpage404
   }
-
- 
 ]
 
 const router = createRouter({
