@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-vue-next'
 </script>
 <template>
 <div class="w-full h-full flex flex-col items-center justify-center ">
-  <svg width="1000" height="300" viewBox="0 0 1258 508" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class="max-w-full " width="100%" height="300" viewBox="0 0 1258 508" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M446.754 286.323C444.763 289.874 440.403 290.362 433.417 289.688C428.164 289.178 423.374 288.785 418.12 285.922C414.443 283.92 411.532 281.211 409.407 278.58C407.105 275.73 403.891 272.477 405.466 269.244C407.632 264.805 420.15 261.066 432.307 267.18C445.661 273.9 448.701 282.852 446.754 286.323Z" fill="#F9FAFB"/>
 <path d="M845.916 262.901C837.776 268.968 824.858 265.428 824.858 265.428C824.858 265.428 825.145 252.052 833.291 245.99C841.431 239.923 854.342 243.458 854.342 243.458C854.342 243.458 854.055 256.834 845.916 262.901Z" fill="#F9FAFB"/>
 <path d="M431.037 147.638C438.774 156.588 454.366 155.804 454.366 155.804C454.366 155.804 457.404 140.509 449.659 131.563C441.921 122.613 426.337 123.392 426.337 123.392C426.337 123.392 423.3 138.688 431.037 147.638Z" fill="#F9FAFB"/>
@@ -25,17 +25,18 @@ import { Loader2 } from 'lucide-vue-next'
 </svg>
 
 
-    <div class="flex flex-col items-center justify-center mb-8">
+    <div class="flex flex-col items-center justify-center mb-5 mt-100 ">
         <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-600 mt-2">Page not Found</p>
         <p class="text-center md:text-lg xl:text-xl text-gray-500 mt-4">
     Oops, looks like you followed a bad link. If you think there's a problem with us, please tell us.
 </p>
     </div>
-    <Button class="w-auto  sm:w-auto bg-lime-500 hover:bg-lime-600 ">
-        <a href="/login" class="block p-4 text-black">
-          Sign in
-        </a>
-      </Button>
+    <Button class="w-auto sm:w-auto bg-lime-400 hover:bg-lime-500">
+  <a href="/login" class="block p-4 text-black font-bold">
+    Sign in
+  </a>
+</Button>
+
 </div>
 
 </template>
