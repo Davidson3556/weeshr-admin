@@ -4,20 +4,21 @@ import { Loader2 } from 'lucide-vue-next'
 
 </script>
 <template>
-  <div class="max-w-full text-center">
+  <div class="w-full h-screen flex flex-col items-center justify-center">
     <img
-      class="w-full h-auto"
+      class="max-w-full h-auto sm:w-auto sm:h-auto"
       src="https://res.cloudinary.com/dufimctfc/image/upload/v1708972628/Container_rydkpd.svg"
       alt=""
     />
     <div class="flex justify-center items-center mt-4">
-
-     <Button class="w-auto  sm:w-auto bg-lime-500 hover:bg-lime-600 ">
+      <Button class="w-auto sm:w-auto bg-lime-500 hover:bg-lime-600">
         <a href="/login" class="block p-4 text-black">
           Sign in
         </a>
       </Button>
-
     </div>
   </div>
 </template>
+
+
+
