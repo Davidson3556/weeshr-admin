@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-vue-next'
 </script>
 <template>
 <div class="w-full h-screen flex flex-col items-center justify-center ">
-  <svg class="max-w-full " width="100%" height="300" viewBox="0 0 1258 508" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class="max-w-full " width="100%" height="250" viewBox="0 0 1258 508" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M446.754 286.323C444.763 289.874 440.403 290.362 433.417 289.688C428.164 289.178 423.374 288.785 418.12 285.922C414.443 283.92 411.532 281.211 409.407 278.58C407.105 275.73 403.891 272.477 405.466 269.244C407.632 264.805 420.15 261.066 432.307 267.18C445.661 273.9 448.701 282.852 446.754 286.323Z" fill="#F9FAFB"/>
 <path d="M845.916 262.901C837.776 268.968 824.858 265.428 824.858 265.428C824.858 265.428 825.145 252.052 833.291 245.99C841.431 239.923 854.342 243.458 854.342 243.458C854.342 243.458 854.055 256.834 845.916 262.901Z" fill="#F9FAFB"/>
 <path d="M431.037 147.638C438.774 156.588 454.366 155.804 454.366 155.804C454.366 155.804 457.404 140.509 449.659 131.563C441.921 122.613 426.337 123.392 426.337 123.392C426.337 123.392 423.3 138.688 431.037 147.638Z" fill="#F9FAFB"/>
@@ -22,13 +22,14 @@ import { Loader2 } from 'lucide-vue-next'
 <path d="M461.406 356.6L494.015 324.01" stroke="#373B4D" stroke-width="17.5439" stroke-linecap="round" stroke-linejoin="round"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M706.025 356.032V320.867C706.026 315.054 707.552 309.343 710.451 304.304C713.35 299.265 717.52 295.073 722.547 292.149L755.795 272.809C760.874 269.856 766.645 268.301 772.52 268.301C778.395 268.301 784.166 269.856 789.245 272.809L822.493 292.149C827.521 295.072 831.694 299.263 834.594 304.302C837.494 309.342 839.021 315.053 839.022 320.867V356.032C839.021 361.845 837.495 367.555 834.596 372.595C831.697 377.634 827.527 381.825 822.501 384.75L789.251 404.09C784.173 407.043 778.402 408.598 772.527 408.598C766.652 408.598 760.882 407.043 755.803 404.09L722.553 384.75C717.525 381.827 713.353 377.636 710.453 372.597C707.552 367.557 706.026 361.846 706.025 356.032Z" fill="#373B4D"/>
 <path d="M772.523 338.45V305.219V338.45ZM772.516 364.295C772.274 364.295 772.034 364.343 771.81 364.435C771.586 364.528 771.382 364.664 771.212 364.836C771.041 365.008 770.905 365.211 770.813 365.436C770.722 365.66 770.675 365.9 770.677 366.142C770.677 366.508 770.785 366.865 770.989 367.169C771.192 367.473 771.481 367.709 771.819 367.849C772.157 367.988 772.529 368.025 772.888 367.953C773.247 367.881 773.576 367.704 773.834 367.445C774.092 367.186 774.267 366.856 774.338 366.497C774.408 366.138 774.37 365.767 774.229 365.429C774.088 365.092 773.85 364.804 773.545 364.602C773.24 364.401 772.882 364.294 772.516 364.295Z" stroke="#F9FAFB" stroke-width="11.4391" stroke-linecap="round" stroke-linejoin="round"/>
+
 </svg>
 
 
-    <div class="flex flex-col items-center justify-center mb-5 mt-100 ">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-600 mt-2">Page not Found</p>
+    <div class="flex flex-col items-center justify-center mb-5 mt-100  ">
+        <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mt-">Page not Found</p>
         <p class="text-center md:text-lg xl:text-xl text-gray-500 mt-4">
-    Oops, looks like you followed a bad link. If you think there's a problem with us, please tell us.
+    Oops! looks like you followed a bad link. If you think there's a problem with us, please tell us.
 </p>
     </div>
     <Button class="w-auto sm:w-auto bg-lime-400 hover:bg-lime-500">
@@ -36,8 +37,8 @@ import { Loader2 } from 'lucide-vue-next'
     Home
   </a>
 </Button>
-
 </div>
+
 
 </template>
 
