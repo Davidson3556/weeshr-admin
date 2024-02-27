@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-vue-next'
 
 </script>
 <template>
-<div class="w-full h-full flex flex-col items-center justify-center ">
+<div class="w-full h-screen flex flex-col items-center justify-center ">
   <svg class="max-w-full " width="100%" height="300" viewBox="0 0 1258 508" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M446.754 286.323C444.763 289.874 440.403 290.362 433.417 289.688C428.164 289.178 423.374 288.785 418.12 285.922C414.443 283.92 411.532 281.211 409.407 278.58C407.105 275.73 403.891 272.477 405.466 269.244C407.632 264.805 420.15 261.066 432.307 267.18C445.661 273.9 448.701 282.852 446.754 286.323Z" fill="#F9FAFB"/>
 <path d="M845.916 262.901C837.776 268.968 824.858 265.428 824.858 265.428C824.858 265.428 825.145 252.052 833.291 245.99C841.431 239.923 854.342 243.458 854.342 243.458C854.342 243.458 854.055 256.834 845.916 262.901Z" fill="#F9FAFB"/>
@@ -32,8 +32,8 @@ import { Loader2 } from 'lucide-vue-next'
 </p>
     </div>
     <Button class="w-auto sm:w-auto bg-lime-400 hover:bg-lime-500">
-  <a href="/login" class="block p-4 text-black font-bold">
-    Sign in
+  <a href="/" class="block p-4 text-black font-bold">
+    Home
   </a>
 </Button>
 
