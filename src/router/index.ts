@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import Errorpage404 from '../views/Errorpage.vue'
+import configuration from '../views/configuration.vue'
+
 
 const routes = [
   {
@@ -21,6 +23,12 @@ const routes = [
     component: Errorpage404
   },
  
+  {
+    path: '/configuration',
+    name: 'configuration',
+    component: configuration
+  },
+  
   // Added the wildcard route for handling 404 errors here
   {
     path: '/:catchAll(.*)',
