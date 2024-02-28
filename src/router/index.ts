@@ -4,7 +4,6 @@ import LoginView from '../views/LoginView.vue'
 import Errorpage404 from '../views/Errorpage.vue'
 import configuration from '../views/configuration.vue'
 
-
 const routes = [
   {
     path: '/',
@@ -16,19 +15,19 @@ const routes = [
     name: 'login',
     component: LoginView
   },
-  
+
   {
     path: '/errorpage',
     name: 'error',
     component: Errorpage404
   },
- 
+
   {
     path: '/configuration',
     name: 'configuration',
     component: configuration
   },
-  
+
   // Added the wildcard route for handling 404 errors here
   {
     path: '/:catchAll(.*)',
