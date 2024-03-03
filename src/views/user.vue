@@ -1096,7 +1096,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
           </CardContent>
         </Card>
 
-        <Card class=" rounded-xl bg-[#E9F4D1] h-80 shadow-md transition-transform transform hover:scale-105 ">
+        <Card class=" rounded-xl bg-[#E9F4D1] h-90 shadow-md transition-transform transform hover:scale-105 ">
           <CardHeader class="flex items-center justify-between space-y-0">
             <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_4745_1772)">
