@@ -3,20 +3,18 @@ import { cn } from '@/lib/utils'
 </script>
 
 <template>
-  <nav
-    :class="cn('flex items-center space-x-4 lg:space-x-6', $attrs.class ?? '')"
-  >
-    <a
-      class="text-sm font-medium transition-colors hover:text-primary cursor-pointer"
+  <nav :class="cn('flex items-center space-x-4 lg:space-x-6', $attrs.class ?? '')">
+    <a class="text-sm font-medium transition-colors hover:text-primary cursor-pointer" href="/"
+      >Overview</a
     >
-      Overview
-    </a>
+
     <a
       aria-disabled="true"
       class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
     >
       Customers
     </a>
+
     <a
       aria-disabled="true"
       class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
@@ -27,8 +25,10 @@ import { cn } from '@/lib/utils'
     <a
       aria-disabled="true"
       class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
+      href="/permissionpage"
     >
-      Settings
+      Permission
     </a>
+    
   </nav>
 </template>
