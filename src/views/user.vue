@@ -18,9 +18,14 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
   <div class=" flex-col flex h-svh h-full bg-[#f0f8ff]">
     <div class="flex h-16 items-center px-4">
 
-      <h2 class="mx-6 text-1xl  tracking-tight text-gray-500">
-        {{ formattedDate }}</h2>
+      <div class="mx-6 text-1xl  tracking-tight text-gray-500">
+{{ formattedDate }}
 
+<p class="text-3xl font-bold tracking-tight text-gray-800">
+          Users
+
+        </p>
+</div>
       <div class="ml-auto flex items-center space-x-4">
         <p class="font-semibold tracking-tight text-gray-800">Abiola Waltz
           <UserNav />
@@ -31,19 +36,10 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
       </div>
 
     </div>
-    <div class="flex-1 space-y-4 p-8 pt-6 bg-[#f0f8ff] ">
+    <div class="flex-1 space-y-4  p-8 pt-6 bg-[#f0f8ff] ">
 
-      <div class="flex items-center justify-between space-y-2 flex-col sm:flex-row">
-
-
-        <h2 class="text-4xl font-bold tracking-tight text-gray-800">
-          Users
-
-        </h2>
-
-
-      </div>
-      <div class="grid gap-7 md:grid-cols-2 lg:grid-cols-4">
+      
+      <div class="grid gap-7  md:grid-cols-2 lg:grid-cols-4 ">
         <Card class=" rounded-xl bg-[#C6F4EB] h-80 shadow-md transition-transform transform hover:scale-105 ">
           <CardHeader class="flex items-center justify-between space-y-0">
             <svg width="180" height="180" viewBox="0 0 143 141" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1326,19 +1322,21 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
   </div>
 
-  <footer class=" bg-[#f8F9FF] flex flex-row  justify-between
-                         w-full px-7 py-5">
+  
+
+  <footer class=" bg-[#FFFFFF] flex flex-row items-center justify-between
+  mx-4 rounded-xl px-7 py-5 mb-6">
     <div class="flex items-center">
-      <h3 class="text-xs text-center md:text-sm ">©2024 Weeshr, LLC. All right reserved.</h3>
+      <h3 class="text-xs text-center md:text-xs ">©2024 Weeshr, LLC. All right reserved.</h3>
     </div>
-    <div class="flex space-x-4">
+    <div class="flex space-x-2  sm:space-x-1 md:space-x-1">
       <a href="https://www.facebook.com/weeshrapp" target="_blank" rel="noopener noreferrer"><img alt="Facebook"
-          loading="lazy" width="50" height="53" decoding="async" data-nimg="1"
+          loading="lazy" width="43" height="43" decoding="async" data-nimg="1"
           class="inline-block transition-opacity duration-300 hover:opacity-70 md:w-12"
           src="https://res.cloudinary.com/drykej1am/image/upload/v1708288264/weeshr_website/FB_mufgbd.svg"
           style="color: transparent;"></a>
       <a href="https://www.instagram.com/weeshrapp/" target="_blank" rel="noopener noreferrer"><img alt="Instagram"
-          loading="lazy" width="50" height="53" decoding="async" data-nimg="1"
+          loading="lazy" width="43" height="43" decoding="async" data-nimg="1"
           class="inline-block transition-opacity duration-300 hover:opacity-70 md:w-12"
           src="https://res.cloudinary.com/drykej1am/image/upload/v1708288265/weeshr_website/IG_jw9rir.svg"
           style="color: transparent;"></a>
@@ -1371,4 +1369,5 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
 
-</div></template>
+</div>
+</template>
