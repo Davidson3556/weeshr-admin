@@ -138,7 +138,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 bg-[#f0f8ff]">
 
             <div class="flex  justify-between items-center py-4 px-6 bg-[#FFFFFF] rounded-lg">
-                <div class="text-xl font-bold">App Users
+                <div class="text-2xl font-bold tracking-tight text-gray-800">App Users
                     <p class="text-xs  tracking-tight text-gray-500">List of Weeshr app users</p>
                 </div>
 
