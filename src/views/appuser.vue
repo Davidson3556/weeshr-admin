@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import Overview from '@/components/UseOverview.vue'
-import DateRangePicker from '@/components/DateRangePicker.vue'
-import MainNav from '@/components/MainNav.vue'
 import Search from '@/components/UseSearch.vue'
 import UserNav from '@/components/UserNav.vue'
 import { Input } from '@/components/ui/input'
@@ -25,6 +22,7 @@ const newUser = ref({
   email: '',
   category: '',
   status: 'Active',
+  dateJoined:'',
 });
 
 const users = ref([
@@ -32,36 +30,28 @@ const users = ref([
     username: '@horrison',
     email: 'alisha@gmail.com',
     category: 'Vendor',
-    dateJoined: '01 Nov 1978',
+    dateJoined: '01 Nov 2011',
     status: 'Active',
   },
 ]);
 
-
 const addUser = () => {
   // Check if username and email are not empty
   if (newUser.value.username && newUser.value.email) {
-    newUser.value.dateJoined = useDateFormat(useNow(), "DD MMM YYYY");
+    newUser.value.dateJoined = useDateFormat(useNow(), "DD MMM YYYY").value;
     users.value.push({ ...newUser.value });
     console.log('New User:', newUser.value);
     // Clear the form after adding a new user
-    Object.keys(newUser.value).forEach((key) => (newUser.value[key] = ''));
+    Object.keys(newUser.value).forEach((key) => (newUser.value[key  as keyof typeof newUser.value] = ''));
   }
 };
 
-const deleteUser = (index) => {
+const deleteUser = (index: number) => {
   users.value.splice(index, 1);
 };
 
 import { Button } from '@/components/ui/button'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
 
 import { useDateFormat, useNow } from "@vueuse/core";
 const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
