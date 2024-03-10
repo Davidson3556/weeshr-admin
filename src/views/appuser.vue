@@ -3,32 +3,6 @@ import Search from '@/components/UseSearch.vue'
 import UserNav from '@/components/UserNav.vue'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
-
-import { h } from 'vue'
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-
-
-
-
 import {
   Sheet,
   SheetContent,
@@ -40,9 +14,6 @@ import {
   SheetClose,
 
 } from '@/components/ui/sheet'
-
-
-
 
 import { ref } from 'vue';
 
@@ -215,11 +186,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
               <td> <button class="bg-[#00C37F] text-white text-sm px-4 py-2 rounded-md">
                {{ user.status }}</button></td>
               <td class="p-3 text-sm whitespace-nowrap">
-                <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
-                  stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
+             
               </td>
             </tr>
           </tbody>
