@@ -17,21 +17,14 @@ import {
 
 import { ref } from 'vue';
 
-interface User {
-  username: string;
-  email: string;
-  category: string;
-  status: string;
-  dateJoined: string;
-}
-
-const newUser = ref<User>({
+const newUser = ref({
   username: '',
   email: '',
   category: '',
   status: '',
   dateJoined: '',
 });
+
 const users = ref([
   {
     username: '@horrison',
