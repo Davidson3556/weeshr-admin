@@ -1,21 +1,83 @@
 <script setup lang="ts">
 import Search from '@/components/UseSearch.vue'
 import UserNav from '@/components/UserNav.vue'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
+
+
+
+
+import { 
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetFooter,
-  SheetClose,
+} from '@/components/ui/sheet'     
 
-} from '@/components/ui/sheet'
 
-import { ref } from 'vue';
+
+
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+import {
+  Table, TableRow, TableBody, TableHeader,
+  TableCaption,
+  TableCell,
+  TableHead,
+
+
+} from '@/components/ui/table'
+
+
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { toast } from '@/components/ui/toast'
+
+const formSchema = toTypedSchema(z.object({
+  username: z.string().min(2).max(50),
+
+  userEmail: z
+      .string({
+        required_error: 'Please enter a valid email'
+      })
+      .email(),
+
+      category: z.string().refine(value => ['Admin', 'Vendor'].includes(value), {
+      message: 'Please select a valid category',
+    }),
+  
+}))
+
+
+
+const { handleSubmit } = useForm({
+  validationSchema: formSchema,
+})
+
+
+
+import { h, ref } from 'vue';
 
 const newUser = ref({
   username: '',
@@ -31,24 +93,37 @@ const users = ref([
     email: 'alisha@gmail.com',
     category: 'Vendor',
     dateJoined: '01 Nov 2011',
-    status: 'Active',
+    status: 'true',
   },
 ]);
 
-const addUser = () => {
-  // Check if username and email are not empty
-  if (newUser.value.username && newUser.value.email) {
-    newUser.value.dateJoined = useDateFormat(useNow(), "DD MMM YYYY").value;
-    users.value.push({ ...newUser.value });
-    console.log('New User:', newUser.value);
-    // Clear the form after adding a new user
-    Object.keys(newUser.value).forEach((key) => (newUser.value[key as keyof typeof newUser.value] = ''));
-  }
-};
 
-const deleteUser = (index: number) => {
-  users.value.splice(index, 1);
-};
+// Add the new user to the users array when the form is submitted
+const onSubmit = handleSubmit((values) => {
+  const user = {
+    username: values.username,
+    email: values.userEmail,
+    category: values.category, // Assuming the user category is selected via the "user" field
+    dateJoined: formattedDate.value, // Assuming you want to use the formatted date
+    status: 'true', // Set a default status or modify as needed
+  };
+
+  users.value.push(user);
+
+  toast({
+    title: 'You submitted the following values:',
+    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
+  });
+
+  // Reset the form fields after submission
+  newUser.value = {
+    username: '',
+    email: '',
+    category: '',
+    status: '',
+    dateJoined: '',
+  };
+});
 
 import { Button } from '@/components/ui/button'
 
@@ -57,7 +132,10 @@ import { useDateFormat, useNow } from "@vueuse/core";
 const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
-
+const toggleStatus = (user) => {
+  user.status = !user.status;
+  // Optionally, you can perform any additional logic or API calls here
+};
 </script>
 
 
@@ -85,7 +163,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
     </div>
     <div class="ml-auto py-4 px-10">
-      <sheet>
+      <Sheet>
         <SheetTrigger as-child>
           <button class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
             <div class="text-base text-[#F8F9FF] text-center flex items-center">
@@ -99,99 +177,147 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
             </div>
           </button>
         </SheetTrigger>
-
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Create user</SheetTitle>
+            <SheetTitle>Edit profile</SheetTitle>
             <SheetDescription>
-              Make changes to the user's profile here. Click the button add when you're done.
+              Make changes to your profile here. Click save when you're done.
             </SheetDescription>
           </SheetHeader>
-          <div class="grid gap-4 py-4">
-            <div class="grid grid-cols-4 items-center gap-4">
-              <Label for="username" class="text-right">
-                Username
-              </Label>
-              <Input v-model="newUser.username" id="username" class="col-span-3" />
-            </div>
-            <div class="grid grid-cols-4 items-center gap-4">
-              <Label for="email" class="text-right">Email</Label>
-              <Input v-model="newUser.email" type="email" id="email" class="col-span-3" />
-            </div>
-            <div class="grid grid-cols-4 items-center gap-4">
-              <Label for="category" class="text-right">Category</Label>
-              <select v-model="newUser.category" id="category" class="col-span-3">
-                <option value="Vendor">Vendor</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
+          <CardContent class="grid gap-4">
+            <form class="space-y-4" @submit="onSubmit">
 
-            <div class="grid grid-cols-4 items-center gap-4">
-              <Label for="status" class="text-right">Status</Label>
-              <select v-model="newUser.status" id="status" class="col-span-3">
-                <option value="Active">Active</option>
-                <option value="Non-Active">Non-Active</option>
-              </select>
-            </div>
-          </div>
-          <SheetFooter>
-            <SheetClose as-child>
-              <Button @click="addUser" type="button">
-                Add user
-              </Button>
-            </SheetClose>
-          </SheetFooter>
+              <FormField v-slot="{ componentField }" name="user">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">Username</FormLabel>
+                  <FormControl>
+                    <Input id="text" type="text" placeholder="username" class="focus-visible:ring-blue-600"
+                      v-bind="componentField" />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+
+
+              <FormField v-slot="{ componentField }" name="userEmail">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">Email</FormLabel>
+                  <FormControl>
+                    <Input id="email" type="email" placeholder="weeshr@admin.com" class="focus-visible:ring-blue-600"
+                      v-bind="componentField" />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+              <FormField v-slot="{ componentField }" name="category">
+      <FormItem>
+        <FormLabel>User Category</FormLabel>
+
+        <Select v-bind="componentField">
+          <FormControl>
+            <SelectTrigger>
+              <SelectValue placeholder="Select User's Category" />
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="Admin">
+                Admin
+              </SelectItem>
+              <SelectItem value="Vendor">
+                Vendor
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        
+        
+        <FormMessage />
+      </FormItem>
+    </FormField>
+    <Button type="submit">
+      Submit
+    </Button>
+            </form>
+          </CardContent>
         </SheetContent>
-      </sheet>
+      </Sheet>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 bg-[#f0f8ff]">
 
       <div class="flex  justify-between items-center py-4 px-6 bg-[#FFFFFF] rounded-lg">
-      <div class="text-2xl font-bold tracking-tight text-gray-800">App Users
-        <p class="text-xs   text-gray-500">List of Admins & Users</p>
-      </div>
+        <div class="text-2xl font-bold tracking-tight text-gray-800">App Users
+          <p class="text-xs   text-gray-500">List of Admins & Users</p>
+        </div>
 
         <Search />
 
 
       </div>
 
-      <div class="bg-white   overflow-auto rounded-lg shadow  min-height:600px">
-        <table class="w-full ">
-          <thead class="text-xs sm:text-sm md:text-base font-semibold bg-gray-200">
-            <tr>
-              <th class="p-3 text-sm font-semibold tracking-wide text-left">Users</th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-left">Email</th>
-              <th class="p-3  text-sm font-semibold tracking-wide text-left">User's category</th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-left">Onboarded</th>
-              <th class="p-3  text-sm font-semibold tracking-wide text-left">Status</th>
-              <th class="p-3 w-24 text-sm font-semibold tracking-wide text-left">
-              <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="bg-white overflow-auto rounded-lg shadow min-height:600px">
+    <Table class="min-height=600">
+      <TableHeader>
+        <TableRow class="text-xs sm:text-sm md:text-base font-semibold bg-gray-200">
+          <TableHead> Users </TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>User's Category</TableHead>
+          <TableHead>Onboarded</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>
+            <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
                   stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
                   stroke-linejoin="round" />
               </svg>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow v-for="user in users" :key="user.username">
+          <TableCell class="font-medium">{{ user.username }}</TableCell>
+          <TableCell>{{ user.email }}</TableCell>
+          <TableCell>{{ user.category }}</TableCell>
+          <TableCell>{{ user.dateJoined }}</TableCell>
+          <TableCell>
+  <button
+    @click="toggleStatus(user)"
+    :class="{ 'bg-[#00C37F]': user.status, 'bg-[#FF4757]': !user.status }"
+    class="text-white text-sm px-4 py-2 rounded-md"
+  >
+    {{ user.status ? 'Active' : 'Non-Active' }}
+  </button>
+</TableCell>
+          <TableCell>
+            <!-- Add any action button or link here -->
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </div>
+  
 
-            </th>
-              <!-- Added Actions column for Delete button -->
-            </tr>
-          </thead>
-
-          <tbody class="divide-y divide-gray-100">
-            <tr v-for="(user, index) in users" :key="index" class="border-b hover:bg-gray-100">
-              <td class="p-3 text-sm whitespace-nowrap">{{ user.username }}</td>
-              <td class="p-3 text-sm whitespace-nowrap">{{ user.email }}</td>
-              <td class="p-3 text-sm whitespace-nowrap">{{ user.category }}</td>
-              <td class="p-3 text-sm whitespace-nowrap">{{ user.dateJoined }}</td>
-              <td> <button class="bg-[#00C37F] text-white text-sm px-4 py-2 rounded-md">
-               {{ user.status }}</button></td>
-              <td class="p-3 text-sm whitespace-nowrap">
-             
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      
     </div>
 
   </div>
