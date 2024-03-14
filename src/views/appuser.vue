@@ -145,7 +145,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
             </SheetDescription>
           </SheetHeader>
           <CardContent class="grid gap-4">
-            <form class="space-y-4" @submit.prevent="handleSubmit(onSubmit)">
+            <form class="space-y-4" @submit.prevent="onSubmit">
 
               <FormField v-slot="{ componentField }" name="username">
                 <FormItem v-auto-animate>
@@ -176,7 +176,9 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
     <FormLabel>User Category</FormLabel>
     <FormControl>
       <select v-model="newUser.category" id="categories" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-     <p> Choose a User category</p>
+        <FormLabel class="text-blue-900">Choose a User category</FormLabel>
+
+         
         <option value="Vendor">Vendor</option>
         <option value="Admin">Admin</option>
       </select>
@@ -253,6 +255,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
   >
     {{ user.status ? 'Active' : 'Non-Active' }}
   </button>
+  
 </TableCell>
           <TableCell>
             <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
