@@ -1,43 +1,24 @@
 <script setup lang="ts">
 import Search from '@/components/UseSearch.vue'
 import UserNav from '@/components/UserNav.vue'
-
-
-
-
-import { 
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'     
-
-
-
-
+import { ref } from 'vue';
 
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 
 import {
   Table, TableRow, TableBody, TableHeader,
   TableCaption,
   TableCell,
   TableHead,
-
-
 } from '@/components/ui/table'
-
 
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -52,90 +33,69 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 
 const formSchema = toTypedSchema(z.object({
   username: z.string().min(2).max(50),
-
-  userEmail: z
-      .string({
-        required_error: 'Please enter a valid email'
-      })
-      .email(),
-
-      category: z.string().refine(value => ['Admin', 'Vendor'].includes(value), {
-      message: 'Please select a valid category',
-    }),
-  
+  userEmail: z.string().email(),
+  category: z.string().refine(value => ['Admin', 'Vendor'].includes(value), {
+    message: 'Please select a valid category',
+  }),
 }))
-
 
 
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
 })
 
-
-
-import { h, ref } from 'vue';
-
 const newUser = ref({
   username: '',
-  email: '',
+  userEmail: '',
   category: '',
-  status: '',
-  dateJoined: '',
 });
 
 const users = ref([
   {
     username: '@horrison',
-    email: 'alisha@gmail.com',
+    userEmail: 'alisha@gmail.com',
     category: 'Vendor',
     dateJoined: '01 Nov 2011',
-    status: 'true',
+    status: true,
   },
 ]);
 
-
-// Add the new user to the users array when the form is submitted
-const onSubmit = handleSubmit((values) => {
+const onSubmit = handleSubmit(async (values) => {
   const user = {
     username: values.username,
-    email: values.userEmail,
-    category: values.category, // Assuming the user category is selected via the "user" field
-    dateJoined: formattedDate.value, // Assuming you want to use the formatted date
-    status: 'true', // Set a default status or modify as needed
+    userEmail: values.userEmail,
+    category: values.category,
+    dateJoined: formattedDate.value,
+    status: true,
   };
 
   users.value.push(user);
 
   toast({
     title: 'You submitted the following values:',
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
+    description: JSON.stringify(values, null, 2),
   });
 
-  // Reset the form fields after submission
   newUser.value = {
     username: '',
-    email: '',
+    userEmail: '',
     category: '',
-    status: '',
-    dateJoined: '',
   };
 });
 
-import { Button } from '@/components/ui/button'
-
-
+const toggleStatus = (user: { status: boolean; }) => {
+  user.status = !user.status;
+};
 import { useDateFormat, useNow } from "@vueuse/core";
 const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
-const toggleStatus = (user) => {
-  user.status = !user.status;
-  // Optionally, you can perform any additional logic or API calls here
-};
+ 
 </script>
 
 
@@ -185,9 +145,9 @@ const toggleStatus = (user) => {
             </SheetDescription>
           </SheetHeader>
           <CardContent class="grid gap-4">
-            <form class="space-y-4" @submit="onSubmit">
+            <form class="space-y-4" @submit.prevent="handleSubmit(onSubmit)">
 
-              <FormField v-slot="{ componentField }" name="user">
+              <FormField v-slot="{ componentField }" name="username">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Username</FormLabel>
                   <FormControl>
@@ -195,7 +155,7 @@ const toggleStatus = (user) => {
                       v-bind="componentField" />
                   </FormControl>
 
-                  <FormMessage />
+                  <FormMessage for="username" />
                 </FormItem>
               </FormField>
 
@@ -212,32 +172,18 @@ const toggleStatus = (user) => {
                 </FormItem>
               </FormField>
               <FormField v-slot="{ componentField }" name="category">
-      <FormItem>
-        <FormLabel>User Category</FormLabel>
-
-        <Select v-bind="componentField">
-          <FormControl>
-            <SelectTrigger>
-              <SelectValue placeholder="Select User's Category" />
-            </SelectTrigger>
-          </FormControl>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="Admin">
-                Admin
-              </SelectItem>
-              <SelectItem value="Vendor">
-                Vendor
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        
-        
-        <FormMessage />
-      </FormItem>
-    </FormField>
+  <FormItem>
+    <FormLabel>User Category</FormLabel>
+    <FormControl>
+      <select v-model="newUser.category" id="categories" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+     <p> Choose a User category</p>
+        <option value="Vendor">Vendor</option>
+        <option value="Admin">Admin</option>
+      </select>
+    </FormControl>
+    <FormMessage />
+  </FormItem>
+</FormField>
     <Button type="submit">
       Submit
     </Button>
@@ -296,7 +242,7 @@ const toggleStatus = (user) => {
       <TableBody>
         <TableRow v-for="user in users" :key="user.username">
           <TableCell class="font-medium">{{ user.username }}</TableCell>
-          <TableCell>{{ user.email }}</TableCell>
+          <TableCell>{{ user.userEmail }}</TableCell>
           <TableCell>{{ user.category }}</TableCell>
           <TableCell>{{ user.dateJoined }}</TableCell>
           <TableCell>
@@ -309,9 +255,14 @@ const toggleStatus = (user) => {
   </button>
 </TableCell>
           <TableCell>
-            <!-- Add any action button or link here -->
+            <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
+                  stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>    <!-- Add any action button or link here -->
           </TableCell>
         </TableRow>
+        
       </TableBody>
     </Table>
   </div>
