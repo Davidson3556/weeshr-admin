@@ -13,18 +13,23 @@ const formSchema = toTypedSchema(
   z.object({
     username: z.string().min(2).max(50),
     userEmail: z.string().email(),
-    category: z.enum(['Vendor', 'Admin']).optional(),
+    // category: z.enum(['Vendor', 'Admin']).optional(),
   })
 );
 
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
 })
+interface NewUser {
+  username: string;
+  userEmail: string;
+  // category: 'Vendor' | 'Admin'; 
+}
 
 const newUser = ref({
   username: '',
   userEmail: '',
-  category: '',
+  // category: '',
 });
 
 
@@ -90,7 +95,7 @@ const onSubmit = handleSubmit(async (values) => {
   const user = {
     username: values.username,
     userEmail: values.userEmail,
-    category: values.category,
+    category: values.category,    
     dateJoined: formattedDate.value,
     status: true,
   };
