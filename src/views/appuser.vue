@@ -2,6 +2,52 @@
 import Search from '@/components/UseSearch.vue'
 import UserNav from '@/components/UserNav.vue'
 import { ref } from 'vue';
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+import { useDateFormat, useNow } from "@vueuse/core";
+
+
+
+const formSchema = toTypedSchema(
+  z.object({
+    username: z.string().min(2).max(50),
+    userEmail: z.string().email(),
+    category: z.enum(['Vendor', 'Admin']).optional(),
+  })
+);
+
+const { handleSubmit } = useForm({
+  validationSchema: formSchema,
+})
+
+const newUser = ref({
+  username: '',
+  userEmail: '',
+  category: '',
+});
+
+
+const users = ref([
+  {
+    username: '@horrison',
+    userEmail: 'alisha@gmail.com',
+    category: 'Vendor',
+    dateJoined: '01 Nov 2011',
+    status: true,
+  },
+]);
+
+
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 import {
   Sheet,
@@ -20,9 +66,7 @@ import {
   TableHead,
 } from '@/components/ui/table'
 
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
+
 
 import {
   FormControl,
@@ -36,34 +80,11 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 
-const formSchema = toTypedSchema(z.object({
-  username: z.string().min(2).max(50),
-  userEmail: z.string().email(),
-  category: z.string().refine(value => ['Admin', 'Vendor'].includes(value), {
-    message: 'Please select a valid category',
-  }),
-}))
 
 
-const { handleSubmit } = useForm({
-  validationSchema: formSchema,
-})
 
-const newUser = ref({
-  username: '',
-  userEmail: '',
-  category: '',
-});
 
-const users = ref([
-  {
-    username: '@horrison',
-    userEmail: 'alisha@gmail.com',
-    category: 'Vendor',
-    dateJoined: '01 Nov 2011',
-    status: true,
-  },
-]);
+
 
 const onSubmit = handleSubmit(async (values) => {
   const user = {
@@ -91,11 +112,10 @@ const onSubmit = handleSubmit(async (values) => {
 const toggleStatus = (user: { status: boolean; }) => {
   user.status = !user.status;
 };
-import { useDateFormat, useNow } from "@vueuse/core";
 const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
- 
+
 </script>
 
 
@@ -145,7 +165,8 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
             </SheetDescription>
           </SheetHeader>
           <CardContent class="grid gap-4">
-            <form class="space-y-4" @submit.prevent="onSubmit">
+
+            <form class="space-y-4" @submit="onSubmit" >
 
               <FormField v-slot="{ componentField }" name="username">
                 <FormItem v-auto-animate>
@@ -171,42 +192,30 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
                   <FormMessage />
                 </FormItem>
               </FormField>
-              <FormField v-slot="{ componentField }" name="category">
-  <FormItem>
-    <FormLabel>User Category</FormLabel>
-    <FormControl>
-      <select v-model="newUser.category" id="categories" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <FormLabel class="text-blue-900">Choose a User category</FormLabel>
 
-         
-        <option value="Vendor">Vendor</option>
-        <option value="Admin">Admin</option>
-      </select>
-    </FormControl>
-    <FormMessage />
-  </FormItem>
-</FormField>
-    <Button type="submit">
-      Submit
-    </Button>
+              <FormField v-slot="{ componentField }" name="category">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">User Category</FormLabel>
+                  <FormControl>
+                    <select v-model="newUser.category" id="categories"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      v-bind="componentField"
+                      <option value="Vendor">Vendor</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+
+              <Button type="submit">
+                Submit
+              </Button>
             </form>
           </CardContent>
         </SheetContent>
       </Sheet>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -224,54 +233,52 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
       </div>
 
       <div class="bg-white overflow-auto rounded-lg shadow min-height:600px">
-    <Table class="min-height=600">
-      <TableHeader>
-        <TableRow class="text-xs sm:text-sm md:text-base font-semibold bg-gray-200">
-          <TableHead> Users </TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>User's Category</TableHead>
-          <TableHead>Onboarded</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>
-            <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
-                  stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="user in users" :key="user.username">
-          <TableCell class="font-medium">{{ user.username }}</TableCell>
-          <TableCell>{{ user.userEmail }}</TableCell>
-          <TableCell>{{ user.category }}</TableCell>
-          <TableCell>{{ user.dateJoined }}</TableCell>
-          <TableCell>
-  <button
-    @click="toggleStatus(user)"
-    :class="{ 'bg-[#00C37F]': user.status, 'bg-[#FF4757]': !user.status }"
-    class="text-white text-sm px-4 py-2 rounded-md"
-  >
-    {{ user.status ? 'Active' : 'Non-Active' }}
-  </button>
-  
-</TableCell>
-          <TableCell>
-            <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
-                  stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>    <!-- Add any action button or link here -->
-          </TableCell>
-        </TableRow>
-        
-      </TableBody>
-    </Table>
-  </div>
-  
+        <Table class="min-height=600">
+          <TableHeader>
+            <TableRow class="text-xs sm:text-sm md:text-base font-semibold bg-gray-200">
+              <TableHead> Users </TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>User's Category</TableHead>
+              <TableHead>Onboarded</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>
+                <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
+                    stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="user in users" :key="user.username">
+              <TableCell class="font-medium">{{ user.username }}</TableCell>
+              <TableCell>{{ user.userEmail }}</TableCell>
+              <TableCell>{{ user.category }}</TableCell>
+              <TableCell>{{ user.dateJoined }}</TableCell>
+              <TableCell>
+                <button @click="toggleStatus(user)"
+                  :class="{ 'bg-[#00C37F]': user.status, 'bg-[#FF4757]': !user.status }"
+                  class="text-white text-sm px-4 py-2 rounded-md">
+                  {{ user.status ? 'Active' : 'Non-Active' }}
+                </button>
 
-      
+              </TableCell>
+              <TableCell>
+                <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
+                    stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg> <!-- Add any action button or link here -->
+              </TableCell>
+            </TableRow>
+
+          </TableBody>
+        </Table>
+      </div>
+
+
+
     </div>
 
   </div>
