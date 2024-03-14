@@ -269,7 +269,8 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
                   <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
                     stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
                     stroke-linejoin="round" />
-                </svg> <!-- Add any action button or link here -->
+                </svg>
+                 <!-- Add any action button or link here -->
               </TableCell>
             </TableRow>
 
