@@ -3,11 +3,12 @@ import { Input } from '@/components/ui/input'
 </script>
 
 <template>
-  <div>
+  <div class="md:w-[100px] lg:w-[300px]">
     <Input
       type="search"
       placeholder="Search..."
-      class="md:w-[100px] lg:w-[300px]"
+    
+
     />
   </div>
 </template>

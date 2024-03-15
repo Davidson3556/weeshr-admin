@@ -125,7 +125,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
 <template>
-  <div class=" flex-col flex h-svh h-full bg-[#f0f8ff]">
+  <div class=" flex-col flex h-svh min-h-[600px] bg-[#f0f8ff]">
     <div class="flex h-16 items-center px-4">
 
       <div class="mx-6 text-1xl  tracking-tight text-gray-500">
@@ -228,19 +228,22 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 bg-[#f0f8ff]">
 
       <div class="flex  justify-between items-center py-4 px-6 bg-[#FFFFFF] rounded-lg">
-        <div class="text-2xl font-bold tracking-tight text-gray-800">App Users
-          <p class="text-xs   text-gray-500">List of Admins & Users</p>
+        <div class="text-2xl font-bold tracking-tight text-[#020721]">App Users
+          <p class="text-xs   text-[#02072199]">List of Admins & Users</p>
         </div>
+        
+          <Search/>
+ 
 
-        <Search />
+       
 
 
       </div>
 
-      <div class="bg-white overflow-auto rounded-lg shadow min-height:600px">
-        <Table class="min-height=600">
+      <div class="bg-white overflow-auto rounded-lg shadow ">
+        <Table >
           <TableHeader>
-            <TableRow class="text-xs sm:text-sm md:text-base font-semibold bg-gray-200">
+            <TableRow class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200">
               <TableHead> Users </TableHead>
               <TableHead>Email</TableHead>
               <TableHead>User's Category</TableHead>
