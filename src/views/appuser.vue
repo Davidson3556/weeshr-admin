@@ -20,11 +20,7 @@ const formSchema = toTypedSchema(
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
 })
-interface NewUser {
-  username: string;
-  userEmail: string;
-  category: 'Vendor' | 'Admin'; 
-}
+
 
 const newUser = ref({
   username: '',
@@ -95,7 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
   const user = {
     username: values.username,
     userEmail: values.userEmail,
-    category: values.category,    
+    // category: values.category,    
     dateJoined: formattedDate.value,
     status: true,
   };
