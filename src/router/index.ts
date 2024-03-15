@@ -3,6 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import Errorpage404 from '../views/Errorpage.vue'
 import configuration from '../views/configuration.vue'
+import user from '../views/user.vue'
+import appuser from '../views/appuser.vue'
+
 
 const routes = [
   {
@@ -26,6 +29,18 @@ const routes = [
     path: '/configuration',
     name: 'configuration',
     component: configuration
+  },
+
+  {
+    path: '/user',
+    name: 'user',
+    component: user
+  },
+
+  {
+    path: '/appuser',
+    name: 'appuser',
+    component: appuser
   },
 
   // Added the wildcard route for handling 404 errors here

@@ -17,8 +17,14 @@ import UserNav from '@/components/UserNav.vue'
   <div class=" flex-col flex h-svh h-full bg-[#f0f8ff]">
     <div class="flex h-16 items-center px-4">
 
-<h2 class="mx-6 text-1xl  tracking-tight text-gray-500">
-{{ formattedDate }}</h2>
+<div class="mx-6 text-1xl  tracking-tight text-gray-500">
+{{ formattedDate }}
+
+<p class="text-3xl font-bold tracking-tight text-gray-800">
+          Configuration
+
+        </p>
+</div>
 
 <div class="ml-auto flex items-center space-x-4">
   <p class="font-semibold tracking-tight text-gray-800">Abiola Waltz<UserNav/>
@@ -34,10 +40,6 @@ import UserNav from '@/components/UserNav.vue'
         <div class="flex items-center justify-between space-y-2 flex-col sm:flex-row">
            
           
-            <h2 class="text-4xl font-bold tracking-tight text-gray-800">
-          Configuration
-
-        </h2>
        
          
         </div>
