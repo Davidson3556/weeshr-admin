@@ -43,7 +43,17 @@ const users = ref([
   },
 ]);
 
+// Define search query
+const searchQuery = ref('');
 
+const searchUsers = () => {
+  // Filter users based on the search query
+  return users.value.filter(user => {
+    const usernameMatch = user.username.toLowerCase().includes(searchQuery.value.toLowerCase());
+    const emailMatch = user.userEmail.toLowerCase().includes(searchQuery.value.toLowerCase());
+    return usernameMatch || emailMatch;
+  });
+};
 
 import {
   Select,
@@ -225,7 +235,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 bg-[#f0f8ff]">
+    <Card class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 ">
 
       <div class="flex  justify-between items-center py-4 px-6 bg-[#FFFFFF] rounded-lg">
         <div class="text-2xl font-bold tracking-tight text-[#020721]">App Users
@@ -233,8 +243,6 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
         </div>
 
         <Search />
-
-
 
 
 
@@ -268,7 +276,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
                 <button @click="toggleStatus(user)"
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="text-white text-sm px-4 py-2 rounded-md">
-                  {{ user.status ? 'Active' : 'Non-Active' }}
+                  {{ user.status ? 'Active' : 'Inactive' }}
                 </button>
 
               </TableCell>
@@ -288,7 +296,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
 
-    </div>
+    </Card>
 
   </div>
 
