@@ -13,19 +13,23 @@ const formSchema = toTypedSchema(
   z.object({
     username: z.string().min(2).max(50),
     userEmail: z.string().email(),
-    category: z.enum(['Vendor', 'Admin']).optional(),
+    // category: z.enum(['Vendor', 'Admin']).optional(),
   })
 );
 
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
 })
-
+interface NewUser {
+  username: string;
+  userEmail: string;
+  // category: 'Vendor' | 'Admin'; 
+}
 
 const newUser = ref({
   username: '',
   userEmail: '',
-  category: '',
+  // category: '',
 });
 
 
@@ -106,7 +110,7 @@ const onSubmit = handleSubmit(async (values) => {
   newUser.value = {
     username: '',
     userEmail: '',
-    category: '',
+    // category: '',
   };
 });
 
@@ -194,7 +198,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
                 </FormItem>
               </FormField>
 
-              <FormField v-slot="{ componentField }" name="category">
+              <!-- <FormField v-slot="{ componentField }" name="category">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">User Category</FormLabel>
                   <FormControl>
@@ -207,7 +211,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              </FormField>
+              </FormField> -->
 
               <Button type="submit">
                 Submit
