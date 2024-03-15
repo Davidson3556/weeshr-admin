@@ -95,7 +95,7 @@ const onSubmit = handleSubmit(async (values) => {
   const user = {
     username: values.username,
     userEmail: values.userEmail,
-    category:  newUser.category as 'Vendor' | 'Admin',    
+    category: (newUser.value.category as 'Vendor' | 'Admin'),    
     dateJoined: formattedDate.value,
     status: true,
   };
