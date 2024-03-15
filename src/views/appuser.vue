@@ -13,7 +13,7 @@ const formSchema = toTypedSchema(
   z.object({
     username: z.string().min(2).max(50),
     userEmail: z.string().email(),
-    // category: z.enum(['Vendor', 'Admin']).optional(),
+    category: z.enum(['Vendor', 'Admin']).optional(),
   })
 );
 
@@ -23,13 +23,13 @@ const { handleSubmit } = useForm({
 interface NewUser {
   username: string;
   userEmail: string;
-  // category: 'Vendor' | 'Admin'; 
+  category: 'Vendor' | 'Admin'; 
 }
 
 const newUser = ref({
   username: '',
   userEmail: '',
-  // category: '',
+  category: '',
 });
 
 
