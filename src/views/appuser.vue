@@ -23,7 +23,7 @@ const { handleSubmit } = useForm({
 interface NewUser {
   username: string;
   userEmail: string;
-  category: 'Vendor' | 'Admin'; 
+  category: 'Vendor' | 'Admin';
 }
 
 const newUser = ref({
@@ -95,7 +95,7 @@ const onSubmit = handleSubmit(async (values) => {
   const user = {
     username: values.username,
     userEmail: values.userEmail,
-    category: (newUser.value.category as 'Vendor' | 'Admin'),    
+    category: (newUser.value.category as 'Vendor' | 'Admin'),
     dateJoined: formattedDate.value,
     status: true,
   };
@@ -166,12 +166,12 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
           <SheetHeader>
             <SheetTitle>Edit profile</SheetTitle>
             <SheetDescription>
-              Make changes to your profile here. Click save when you're done.
+              Add a new profile here. Click submit when you're done.
             </SheetDescription>
           </SheetHeader>
           <CardContent class="grid gap-4">
 
-            <form class="space-y-4" @submit="onSubmit" >
+            <form class="space-y-4" @submit="onSubmit">
 
               <FormField v-slot="{ componentField }" name="username">
                 <FormItem v-auto-animate>
@@ -231,17 +231,17 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
         <div class="text-2xl font-bold tracking-tight text-[#020721]">App Users
           <p class="text-xs   text-[#02072199]">List of Admins & Users</p>
         </div>
-        
-          <Search/>
- 
 
-       
+        <Search />
+
+
+
 
 
       </div>
 
       <div class="bg-white overflow-auto rounded-lg shadow ">
-        <Table >
+        <Table>
           <TableHeader>
             <TableRow class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200">
               <TableHead> Users </TableHead>
@@ -266,7 +266,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
               <TableCell>{{ user.dateJoined }}</TableCell>
               <TableCell>
                 <button @click="toggleStatus(user)"
-                  :class="{ 'bg-[#00C37F]': user.status, 'bg-[#FF4757]': !user.status }"
+                  :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="text-white text-sm px-4 py-2 rounded-md">
                   {{ user.status ? 'Active' : 'Non-Active' }}
                 </button>
@@ -278,7 +278,7 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
                     stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
                     stroke-linejoin="round" />
                 </svg>
-                 <!-- Add any action button or link here -->
+                <!-- Add any action button or link here -->
               </TableCell>
             </TableRow>
 
