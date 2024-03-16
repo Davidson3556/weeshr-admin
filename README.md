@@ -27,6 +27,13 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 npm install
 ```
 
+### Run prettier code formater
+
+```sh
+npm run format
+```
+
+
 ### Compile and Hot-Reload for Development
 
 ```sh

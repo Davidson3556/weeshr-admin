@@ -15,5 +15,7 @@ import Toaster from '@/components/ui/toast/UseToaster.vue'
 </template>
 
 <style scoped>
-
+.toast {
+  background-color: red
+}
 </style>
