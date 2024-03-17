@@ -12,26 +12,32 @@ import {
   DropdownMenuTrigger,
 
 } from '@/components/ui/dropdown-menu'
+
+import { useSuperAdminStore } from '@/stores/super-admin'
+
+const superAdminStore = useSuperAdminStore()
+
+
+const logout = async () => {
+  await superAdminStore.logout();
+};
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button variant="ghost" class="relative h-8 w-9 rounded-full">
-        <Avatar class="h-8 w-8">
-          <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-          <div class=" bg-gray-400 p-2 flex justify-center rounded-full ">SC</div>
-        </Avatar>
+      <Button variant="ghost" class="relative  h-12 w-12 bg-[#EBCE7E] hover:bg-[#EBCE7E] rounded-2xl ml-2"> 
+          KP
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56" align="end">
-      <DropdownMenuLabel class="font-normal flex">
+      <DropdownMenuLabel class="flex font-normal">
         <div class="flex flex-col space-y-1">
           <p class="text-sm font-medium leading-none">
-            shadcn
+            Kp
           </p>
           <p class="text-xs leading-none text-muted-foreground">
-            m@example.com
+            test@weeshr.com
           </p>
         </div>
       </DropdownMenuLabel>
@@ -53,7 +59,7 @@ import {
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuItem
-        @click="$router.push({ name: 'login' })"
+      @click="logout"
       >
         Log out
         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

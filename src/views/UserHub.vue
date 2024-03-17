@@ -6,41 +6,26 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import UserNav from '@/components/UserNav.vue'
+
+import MainNav from '@/components/MainNav.vue'
 
 import { useDateFormat, useNow } from "@vueuse/core";
 const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
+import DashboardFooter from '@/components/DashboardFooter.vue';
+
+
 </script>
 
 
 
 <template>
-  <div class=" flex-col flex h-svh h-full bg-[#f0f8ff]">
-    <div class="flex h-16 items-center px-4">
+  <div class=" flex-col flex h-svh h-full bg-[#f0f8ff] relative">
 
-      <div class="mx-6 text-1xl  tracking-tight text-gray-500">
-{{ formattedDate }}
+    <div class="flex-1 space-y-4  p-8 pt-6 bg-[#f0f8ff]  w-full">
 
-<p class="text-3xl font-bold tracking-tight text-gray-800">
-          Users
-
-        </p>
-</div>
-      <div class="ml-auto flex items-center space-x-4">
-        <p class="font-semibold tracking-tight text-gray-800">Abiola Waltz
-          <UserNav />
-        <p class="font-normal text-xs tracking-tight ml-4 ">Adminstrator</p>
-        </p>
-
-
-      </div>
-
-    </div>
-    <div class="flex-1 space-y-4  p-8 pt-6 bg-[#f0f8ff] ">
-
-      
-      <div class="grid gap-7  md:grid-cols-2 lg:grid-cols-4 ">
-        <Card class=" rounded-xl bg-[#C6F4EB] h-80 shadow-md transition-transform transform hover:scale-105 ">
+      <MainNav class="mx-6" headingText="Users Hub" />
+      <div class="grid gap-7 md:grid-cols-2 lg:grid-cols-4 ">
+        <Card class=" rounded-xl bg-[#C6F4EB] h-80 shadow-md transition-transform transform hover:scale-105 mb-5">
           <CardHeader class="flex items-center justify-between space-y-0">
             <svg width="180" height="180" viewBox="0 0 143 141" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -377,22 +362,22 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
               </defs>
             </svg>
 
-            <p class="text-2xl font-bold  text-gray-800">
+            <p class="text-2xl font-bold text-gray-800">
               App Users
             </p>
 
 
           </CardHeader>
           <CardContent class="bg-[#373B4D] rounded-xl  pb-4">
-            <div class="px-1  text-xs   pt-4 ">
-              <p class=" font-semibold   tracking-tight text-gray-400">Members</p>
-              <p class="font-semibold text-2xl text-white">586,004</p>
+            <div class="px-1 pt-4 text-xs ">
+              <p class="font-semibold tracking-tight text-gray-400 ">Members</p>
+              <p class="text-2xl font-semibold text-white">586,004</p>
             </div>
 
           </CardContent>
         </Card>
 
-        <Card class=" rounded-xl bg-[#DCDEFF] h-80 shadow-md transition-transform transform hover:scale-105 ">
+        <Card class=" rounded-xl bg-[#DCDEFF] h-80 shadow-md transition-transform transform hover:scale-105 mb-5">
           <CardHeader class="flex items-center justify-between space-y-0">
             <svg width="180" height="180" viewBox="0 0 144 136" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M60.1967 135.169C24.7621 129.803 -4.0346 96.3002 1.19714 59.0628C5.66036 27.3052 33.5033 2.59094 66.8924 0.257101C69.3101 0.0876775 71.7556 0.0352297 74.2239 0.10689C92.8505 0.644901 109.4 8.0952 121.64 19.3693C133.823 30.5893 141.738 45.5964 143.179 61.3407C147.016 103.23 104.27 141.844 60.1967 135.169Z" fill="#F4F7FA" fill-opacity="0.4"/>
@@ -706,22 +691,22 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 </svg>
 
 
-            <p class="text-2xl font-bold  text-gray-800">
+            <p class="text-2xl font-bold text-gray-800">
               Vendors
             </p>
 
 
           </CardHeader>
           <CardContent class="bg-[#373B4D] rounded-xl  pb-4">
-            <div class="px-1  text-xs   pt-4 ">
-              <p class=" font-semibold   tracking-tight text-gray-400">Members</p>
-              <p class="font-semibold text-2xl text-white">3</p>
+            <div class="px-1 pt-4 text-xs ">
+              <p class="font-semibold tracking-tight text-gray-400 ">Members</p>
+              <p class="text-2xl font-semibold text-white">3</p>
             </div>
 
           </CardContent>
         </Card>
 
-        <Card class=" rounded-xl bg-[#89cff0ee] h-80 shadow-md transition-transform transform hover:scale-105 ">
+        <Card class=" rounded-xl bg-[#89cff0ee] h-80 shadow-md transition-transform transform hover:scale-105 mb-5">
           <CardHeader class="flex items-center justify-between space-y-0">
             <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_4743_1026)">
@@ -1077,22 +1062,22 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 </defs>
 </svg>
 
-            <p class="text-2xl font-bold  text-gray-800">
+            <p class="text-2xl font-bold text-gray-800">
               Admin Staff
             </p>
 
 
           </CardHeader>
           <CardContent class="bg-[#373B4D] rounded-xl  pb-4">
-            <div class="px-1  text-xs   pt-4 ">
-              <p class=" font-semibold   tracking-tight text-gray-400">Members</p>
-              <p class="font-semibold text-2xl text-white">18</p>
+            <div class="px-1 pt-4 text-xs ">
+              <p class="font-semibold tracking-tight text-gray-400 ">Members</p>
+              <p class="text-2xl font-semibold text-white">18</p>
             </div>
 
           </CardContent>
         </Card>
 
-        <Card class=" rounded-xl bg-[#E9F4D1] h-90 shadow-md transition-transform transform hover:scale-105 ">
+        <Card class=" rounded-xl bg-[#E9F4D1] h-90 shadow-md transition-transform transform hover:scale-105 mb-5">
           <CardHeader class="flex items-center justify-between space-y-0">
             <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_4745_1772)">
@@ -1299,16 +1284,16 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 </defs>
 </svg>
 
-          <p class="text-2xl font-bold  text-gray-800">
+          <p class="text-2xl font-bold text-gray-800">
             Partners
           </p>
 
 
         </CardHeader>
         <CardContent class="bg-[#373B4D] rounded-xl  pb-4">
-          <div class="px-1  text-xs   pt-4 ">
-            <p class=" font-semibold   tracking-tight text-gray-400">Members</p>
-            <p class="font-semibold text-2xl text-white">0</p>
+          <div class="px-1 pt-4 text-xs ">
+            <p class="font-semibold tracking-tight text-gray-400 ">Members</p>
+            <p class="text-2xl font-semibold text-white">0</p>
           </div>
 
         </CardContent>
@@ -1320,46 +1305,14 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
     </div>
 
+  
+
+    
+
   </div>
 
   
 
-  <footer class=" bg-[#FFFFFF] flex flex-row items-center justify-between
-  mx-4 rounded-xl px-7 py-5 mb-6">
-    <div class="flex items-center">
-      <h3 class="text-xs text-center md:text-xs ">©2024 Weeshr, LLC. All right reserved.</h3>
-    </div>
-    <div class="flex space-x-2  sm:space-x-1 md:space-x-1">
-      <a href="https://www.facebook.com/weeshrapp" target="_blank" rel="noopener noreferrer"><img alt="Facebook"
-          loading="lazy" width="43" height="43" decoding="async" data-nimg="1"
-          class="inline-block transition-opacity duration-300 hover:opacity-70 md:w-12"
-          src="https://res.cloudinary.com/drykej1am/image/upload/v1708288264/weeshr_website/FB_mufgbd.svg"
-          style="color: transparent;"></a>
-      <a href="https://www.instagram.com/weeshrapp/" target="_blank" rel="noopener noreferrer"><img alt="Instagram"
-          loading="lazy" width="43" height="43" decoding="async" data-nimg="1"
-          class="inline-block transition-opacity duration-300 hover:opacity-70 md:w-12"
-          src="https://res.cloudinary.com/drykej1am/image/upload/v1708288265/weeshr_website/IG_jw9rir.svg"
-          style="color: transparent;"></a>
-      <a href="https://twitter.com/weeshrapp" target="_blank" rel="noopener noreferrer"><img alt="Twitter"
-          loading="lazy" width="43" height="43" decoding="async" data-nimg="1"
-          class="inline-block transition-opacity duration-300 hover:opacity-70 md:w-12"
-          src="https://res.cloudinary.com/drykej1am/image/upload/v1708288266/weeshr_website/X_vigvoj.svg"
-          style="color: transparent;"></a>
-      <a href="https://www.linkedin.com/company/weeshrapp" target="_blank" rel="noopener noreferrer"><img alt="LinkedIn"
-          loading="lazy" width="43" height="43" decoding="async" data-nimg="1"
-          class="inline-block transition-opacity duration-300 hover:opacity-70 md:w-12"
-          src="https://res.cloudinary.com/drykej1am/image/upload/v1708288750/weeshr_website/Group_80_dhlm3v.svg"
-          style="color: transparent;"></a>
-      <a href="https://www.tiktok.com/@weeshrapp" target="_blank" rel="noopener noreferrer"><img alt="TikTok"
-          loading="lazy" width="43" height="43" decoding="async" data-nimg="1"
-          class="inline-block transition-opacity duration-300 hover:opacity-70 md:w-12"
-          src="https://res.cloudinary.com/drykej1am/image/upload/v1708288501/weeshr_website/TiTokWeeshr_yvqc4r.svg"
-          style="color: transparent;"></a>
-
-    </div>
-
-
-  </footer>
 
 
 
@@ -1369,5 +1322,6 @@ const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 
 
 
+  <DashboardFooter></DashboardFooter>
 </div>
 </template>

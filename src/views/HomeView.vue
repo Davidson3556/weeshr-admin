@@ -2,40 +2,24 @@
 import Overview from '@/components/UseOverview.vue'
 import DateRangePicker from '@/components/DateRangePicker.vue'
 import MainNav from '@/components/MainNav.vue'
-import Search from '@/components/UseSearch.vue'
-import UserNav from '@/components/UserNav.vue'
+
 
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
 </script>
 
 <template>
-
-
-  <div class=" flex-col flex h-svh h-full bg-[#f0f8ff]">
-    <div class="border-b">
-      <div class="flex h-16 items-center px-4">
-
-        <MainNav class="mx-6" />
-        <div class="ml-auto flex items-center space-x-4">
-          <Search />
-          <UserNav />
-        </div>
+  <div class="flex flex-col h-full bg-[#F8F9FFB2]">
+    <div class="">
+    
+        <MainNav class="mx-6" headingText="Dashboard" />
+       
       </div>
-    </div>
-    <div class="flex-1 space-y-4 p-8 pt-6 bg-[#f0f8ff]  ">
-      <div class="flex items-center justify-between space-y-2 flex-col sm:flex-row">
-        <h2 class="text-3xl font-bold tracking-tight text-blue-900">
-          Dashboard
-        </h2>
+    
+    <div class="flex-1 space-y-4 p-8 pt-6 bg-[#F8F9FFB2]">
+      <div class="flex flex-col items-center justify-between space-y-2 sm:flex-row">
+        <h2 class="text-3xl font-bold tracking-tight text-blue-900"></h2>
         <div class="flex items-center space-x-2">
           <DateRangePicker />
           <Button>Download</Button>
@@ -59,7 +43,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
         <TabsContent value="overview" class="space-y-4">
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
-              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle class="text-sm font-medium">
                   Total Revenue
                 </CardTitle>
@@ -71,7 +55,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  class="h-4 w-4 text-muted-foreground"
+                  class="w-4 h-4 text-muted-foreground"
                 >
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
@@ -86,7 +70,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
               </CardContent>
             </Card>
             <Card>
-              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle class="text-sm font-medium">
                   Subscriptions
                 </CardTitle>
@@ -98,7 +82,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  class="h-4 w-4 text-muted-foreground"
+                  class="w-4 h-4 text-muted-foreground"
                 >
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
@@ -115,7 +99,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
               </CardContent>
             </Card>
             <Card>
-              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle class="text-sm font-medium">
                   Sales
                 </CardTitle>
@@ -127,7 +111,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  class="h-4 w-4 text-muted-foreground"
+                  class="w-4 h-4 text-muted-foreground"
                 >
                   <rect width="20" height="14" x="2" y="5" rx="2" />
                   <path d="M2 10h20" />
@@ -143,7 +127,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
               </CardContent>
             </Card>
             <Card>
-              <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle class="text-sm font-medium">
                   Active Now
                 </CardTitle>
@@ -155,7 +139,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  class="h-4 w-4 text-muted-foreground"
+                  class="w-4 h-4 text-muted-foreground"
                 >
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
@@ -173,21 +157,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card class="col-span-4">
               <CardHeader>
-                <CardTitle >Overview</CardTitle>
+                <CardTitle>Overview</CardTitle>
               </CardHeader>
               <CardContent class="pl-2">
-                <Overview  />
+                <Overview />
               </CardContent>
             </Card>
-            <Card class=" flex w-full col-span-full grid sm:col-span-3">
+            <Card class="flex grid w-full col-span-full sm:col-span-3">
               <CardHeader>
                 <CardTitle>Recent Sales</CardTitle>
                 <CardDescription>
                   You made 265 sales this month.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-              </CardContent>
+              <CardContent> </CardContent>
             </Card>
           </div>
         </TabsContent>

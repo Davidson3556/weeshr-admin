@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/toast'
 import router from '@/router'
 import { useSuperAdminStore } from '@/stores/super-admin'
+import axios from 'axios'
 
 const currentYear = ref(new Date().getFullYear())
 
@@ -28,7 +29,6 @@ const updateYear = () => {
 }
 
 const superAdminStore = useSuperAdminStore()
-
 
 onMounted(() => {
   updateYear()
@@ -51,21 +51,9 @@ const quotes = [
   "Every 🌈 wish feels like pure magic, courtesy of Weehr App's innovation and simplicity..."
 ]
 
-const successMessages = [
-  'Welcome, OliviaOps! Your daily dose of admin joy is here!',
-  "Woohoo! OliviaOps just joined the admin party. Let's celebrate!",
-  "Look up in the server room! It's OliviaOps – our superhero admin!",
-  'Buckle up, OliviaOps! Your admin superpowers fueled by coffee are activated.',
-  'Adventure awaits, OliviaOps! Ready to explore the admin universe?',
-  'Abracadabra! OliviaOps, the Tech wizard, is in the house.',
-  'Welcome, OliviaOps! The admin puzzle is ready for your genius touch.'
-]
-
 const authors = ['Chloe Thompson', 'Mason Carter', 'Isabella Scott', 'Noah Adams', 'Ava Miller']
 
 const backgroundImage = ref(getRandomImage())
-
-
 
 function getRandomImage() {
   const randomIndex = Math.floor(Math.random() * backgroundImages.length)
@@ -74,8 +62,6 @@ function getRandomImage() {
 
 const quote = ref<string>('')
 const author = ref<string>('')
-
-
 
 onMounted(() => {
   // Choose a random index for variety
@@ -106,225 +92,211 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-// const onSubmit = form.handleSubmit(() => {
-//   loading.value = true
-
-//   const randomIndex = Math.floor(Math.random() * successMessages.length)
-//   const randomMessage = successMessages[randomIndex]
-//   toast({
-//     title: randomMessage,
-//     variant: 'success'
-//   })
-//   setTimeout(() => {
-//     router.push({ name: 'home' })
-//   }, 2000)
-// })
-
-
 const onSubmit = form.handleSubmit(async () => {
-  loading.value = true;
+  loading.value = true
 
   // Ensure userEmail and password have values
   if (form.values.userEmail && form.values.password) {
-    const { userEmail, password } = form.values;
+    const { userEmail, password } = form.values
 
     console.log(userEmail, password)
 
     // Set the username and password in the store
-    superAdminStore.setUsername(userEmail);
-    superAdminStore.setPassword(password);
+    superAdminStore.setuserEmail(userEmail)
+    superAdminStore.setPassword(password)
 
-    const randomIndex = Math.floor(Math.random() * successMessages.length);
-    const randomMessage = successMessages[randomIndex];
-    toast({
-      title: randomMessage,
-      variant: 'success'
-    });
-    setTimeout(() => {
-      router.push({ name: 'home' });
-    }, 2000);
+    try {
+      const response = await axios.post('https://api.staging.weeshr.com/api/v1/admin/login', {
+        email: userEmail,
+        password: password
+      })
+
+      // Check if the token property exists in the response
+      if (response.data.data && response.data.data.user && response.data.data.user.token) {
+        // Access the token from the response data
+        const token = response.data.data.user.token
+
+        // Save the token in Pinia store
+        superAdminStore.setToken(token)
+
+        // Save the token in sessionStorage
+
+        router.push({ name: 'home' })
+      } else {
+        router.push({ name: 'login' })
+      }
+
+      // Redirect to home page after successful login
+    } catch (error) {
+      loading.value = false
+      console.error('Error occurred during login:', error)
+      // Handle login errors, such as displaying error messages to the user
+      toast({
+        title: error.response.data.message || 'An error occurred',
+        variant: 'destructive'
+      })
+    }
   } else {
     // Handle the case when form fields are empty
     toast({
       title: 'Please enter your username/email and password.',
-      variant: 'error'
-    });
-    loading.value = false;
+      variant: 'destructive'
+    })
+    loading.value = false
   }
-});
-
-
+})
 
 // Accessing the username and password directly from the store's state
-const getUsername = superAdminStore.username
+const getUsername = superAdminStore.userEmail
 const getPassword = superAdminStore.password
-
-
-
-
 </script>
 
 <template>
-  <div class="bg-[url('https://res.cloudinary.com/drykej1am/image/upload/v1710591674/kimcfu0uld547xavvpkn.png')] bg-cover relative ">
-    
-
   <div
-    class="container flex flex-col items-center justify-center w-full h-screen md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 "
+    class="bg-[url('https://res.cloudinary.com/drykej1am/image/upload/v1710591674/kimcfu0uld547xavvpkn.png')] bg-cover relative"
   >
-    <img
-      class="absolute bottom-0 h-[640px] w-fit absoluteImg"
-      src="https://res.cloudinary.com/drykej1am/image/upload/v1710588213/gljbojydunbpercw3cqx.png"
-      alt="gradient"
-    />
-
-   
-
-
-
     <div
-      class="relative flex-col hidden h-full p-10 pb-0 text-white bg-center bg-no-repeat bg-cover dark:border-r lg:flex"
+      class="container flex flex-col items-center justify-center w-full h-screen md:grid lg:max-w-none lg:grid-cols-2 lg:px-0"
     >
+      <img
+        class="absolute bottom-0 h-[640px] w-fit absoluteImg"
+        src="https://res.cloudinary.com/drykej1am/image/upload/v1710588213/gljbojydunbpercw3cqx.png"
+        alt="gradient"
+      />
 
-    <img
-    class="hidden lg:block absolute bottom-0 h-[280px]  w-auto transform left-1/2 -translate-x-[50%]"
-    src="https://res.cloudinary.com/drykej1am/image/upload/v1710592164/weeshr_admin/loginPage/cpv0br6dhygp8nyqzyeh.svg"
-    alt="gradient"
-  />
-  
-      <div class="inset-0 flex items-center justify-center w-full h-full text-center -left-[20%]">
-        <div
-          aria-current="page"
-          class="flex items-center -translate-y-[145px] flex-col justify-center space-y-2"
-        >
-          <h4 class="text-[#F8F9FFB2] tracking-widest">
-            THE
-          </h4>
-          <img
-            class="w-auto h-24"
-            src="https://res.cloudinary.com/drykej1am/image/upload/v1697377875/weehser%20pay/Weeshr_Light_lrreyo.svg"
-            alt=""
-          />
-          <h4 class="text-[#F8F9FFB2] tracking-widest">
-            SUPER ADMIN FACTORY
-          </h4>
-        </div>
+      <div
+        class="relative flex-col hidden h-full p-10 pb-0 text-white bg-center bg-no-repeat bg-cover dark:border-r lg:flex"
+      >
+        <img
+          class="hidden lg:block absolute bottom-0 h-[280px] w-auto transform left-1/2 -translate-x-[50%]"
+          src="https://res.cloudinary.com/drykej1am/image/upload/v1710592164/weeshr_admin/loginPage/cpv0br6dhygp8nyqzyeh.svg"
+          alt="gradient"
+        />
 
-        <div class="absolute w-[80%] z-20 mt-auto bottom-[300px] text-white">
-          <blockquote class="space-y-2">
-            <p class="text-lg text-left">
-              {{ quote }}
-            </p>
-            <footer class="text-sm text-end">
-              {{ author }}
-            </footer>
-          </blockquote>
-        </div>
-      </div>
-    </div>
-    <div class="flex justify-center w-full lg:p-8">
-      <div class="w-full max-w-sm lg:p-8">
-        <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <div class="flex flex-col space-y-2 text-center">
-            <div
-              aria-current="page"
-              class="flex lg:hidden justify-center -translate-y-[60px] flex-col space-y-2"
-            >
-              <h4 class="text-[#F8F9FFB2] tracking-widest">
-                THE
-              </h4>
-              <img
-                class="w-auto h-20"
-                src="https://res.cloudinary.com/drykej1am/image/upload/v1697377875/weehser%20pay/Weeshr_Light_lrreyo.svg"
-                alt=""
-              />
-              <h4 class="text-[#F8F9FFB2] tracking-widest">
-                SUPER ADMIN FACTORY
-              </h4>
-            </div>
+        <div class="inset-0 flex items-center justify-center w-full h-full text-center -left-[20%]">
+          <div
+            aria-current="page"
+            class="flex items-center -translate-y-[145px] flex-col justify-center space-y-2"
+          >
+            <h4 class="text-[#F8F9FFB2] tracking-widest">
+              THE
+            </h4>
+            <img
+              class="w-auto h-24"
+              src="https://res.cloudinary.com/drykej1am/image/upload/v1697377875/weehser%20pay/Weeshr_Light_lrreyo.svg"
+              alt=""
+            />
+            <h4 class="text-[#F8F9FFB2] tracking-widest">
+              SUPER ADMIN FACTORY
+            </h4>
           </div>
 
-          <Card class="relative py-3 border-0 rounded-2xl bg-[#D9D9D91A]">
-            <img
-              class="absolute w-auto h-20 -top-[40px]"
-              src="https://res.cloudinary.com/drykej1am/image/upload/v1710587777/mksb1isi3h5kihgepmuv.svg"
-              alt=""
-            />
-
-            <img
-              class="absolute w-auto h-16 -bottom-[35px] right-[60px]"
-              src="https://res.cloudinary.com/drykej1am/image/upload/v1710587780/ed8ljwdauwhuge9mjgzr.svg"
-              alt=""
-            />
-
-            <CardHeader class="space-y-1 pt-9">
-              <CardTitle class="text-2xl text-white"> Sign In </CardTitle>
-            </CardHeader>
-            <CardContent class="grid gap-4">
-              <form class="space-y-4" @submit.prevent="onSubmit">
-                <FormField v-slot="{ componentField }" name="userEmail">
-                  <FormItem v-auto-animate>
-                    <FormLabel class="font-normal text-white">Username/Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="weeshr@admin.com"
-                        class="focus-visible:ring-[#BAEF23]"
-                        v-bind="componentField"
-                        v-model="getUsername"
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-                <FormField v-slot="{ componentField }" name="password">
-                  <FormItem>
-                    <FormLabel class="font-normal text-white">Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="password"
-                        type="password"
-                        class="focus-visible:ring-[#BAEF23]"
-                        v-bind="componentField"
-                        autocomplete
-                        v-model="getPassword"
-                      
-
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-              </form>
-            </CardContent>
-            <CardFooter>
-              <Button
-                @click="onSubmit()"
-                type="submit"
-                class="w-full bg-[#BAEF23] hover:bg-[#BAEF23] hover:scale-105 text-black font-normal"
+          <div class="absolute w-[80%] z-20 mt-auto bottom-[300px] text-white">
+            <blockquote class="space-y-2">
+              <p class="text-lg text-left">
+                {{ quote }}
+              </p>
+              <footer class="text-sm text-end">
+                {{ author }}
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center w-full lg:p-8">
+        <div class="w-full max-w-sm lg:p-8">
+          <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+            <div class="flex flex-col space-y-2 text-center">
+              <div
+                aria-current="page"
+                class="flex lg:hidden justify-center -translate-y-[60px] flex-col space-y-2"
               >
-                <Loader2 v-if="loading" class="w-4 h-4 mr-2 text-black animate-spin" />
-
-                Sign In  
-              </Button>
-              <div class="pt-5 text-xs text-center text-gray-400">
-                <span> Copyright © {{ currentYear }} </span>
+                <h4 class="text-[#F8F9FFB2] tracking-widest">
+                  THE
+                </h4>
+                <img
+                  class="w-auto h-20"
+                  src="https://res.cloudinary.com/drykej1am/image/upload/v1697377875/weehser%20pay/Weeshr_Light_lrreyo.svg"
+                  alt=""
+                />
+                <h4 class="text-[#F8F9FFB2] tracking-widest">
+                  SUPER ADMIN FACTORY
+                </h4>
               </div>
+            </div>
 
+            <Card class="relative py-3 border-0 rounded-2xl bg-[#D9D9D91A]">
+              <img
+                class="absolute w-auto h-20 -top-[40px]"
+                src="https://res.cloudinary.com/drykej1am/image/upload/v1710587777/mksb1isi3h5kihgepmuv.svg"
+                alt=""
+              />
 
-            </CardFooter>
-          </Card>
+              <img
+                class="absolute w-auto h-16 -bottom-[35px] right-[60px]"
+                src="https://res.cloudinary.com/drykej1am/image/upload/v1710587780/ed8ljwdauwhuge9mjgzr.svg"
+                alt=""
+              />
+
+              <CardHeader class="space-y-1 pt-9">
+                <CardTitle class="text-2xl text-white"> Sign In </CardTitle>
+              </CardHeader>
+              <CardContent class="grid gap-4">
+                <form class="space-y-4" @submit.prevent="onSubmit">
+                  <FormField v-slot="{ componentField }" name="userEmail">
+                    <FormItem v-auto-animate>
+                      <FormLabel class="font-normal text-white">Username/Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="weeshr@admin.com"
+                          class="focus-visible:ring-[#BAEF23]"
+                          v-bind="componentField"
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                  <FormField v-slot="{ componentField }" name="password">
+                    <FormItem>
+                      <FormLabel class="font-normal text-white">Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="password"
+                          type="password"
+                          class="focus-visible:ring-[#BAEF23]"
+                          v-bind="componentField"
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
+                </form>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  @click="onSubmit()"
+                  type="submit"
+                  class="w-full bg-[#BAEF23] hover:bg-[#BAEF23] hover:scale-105 text-black font-normal"
+                >
+                  <Loader2 v-if="loading" class="w-4 h-4 mr-2 text-black animate-spin" />
+
+                  Sign In
+                </Button>
+                <div class="pt-5 text-xs text-center text-gray-400">
+                  <span> Copyright © {{ currentYear }} </span>
+                </div>
+              </CardFooter>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
-
-
-
 
 <style scoped>
 .absoluteImg {
