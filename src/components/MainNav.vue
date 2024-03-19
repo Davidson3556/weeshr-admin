@@ -1,34 +1,40 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
+import {  defineProps } from 'vue'
+import UserNav from '@/components/UserNav.vue'
+// Function to format the date in the desired format (e.g., "Tue, 5 Feb 2023")
+import { useDateFormat, useNow } from '@vueuse/core'
+
+const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
+
+const props = defineProps<{
+  headingText: string
+}>()
+
+const headingText = props.headingText
 </script>
 
 <template>
-  <nav :class="cn('flex items-center space-x-4 lg:space-x-6', $attrs.class ?? '')">
-    <a class="text-sm font-medium transition-colors hover:text-primary cursor-pointer" href="/"
-      >Overview</a
-    >
+  <nav class="flex items-center justify-between p-4 py-6 space-x-4 lg:space-x-6">
+    <div>
+      <h4 class="text-[#02072199] text-sm">
+        {{ formattedDate }}
+      </h4>
 
-    <a
-      aria-disabled="true"
-      class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
-    >
-      Customers
-    </a>
+      <h2 class="text-3xl">
+        {{ headingText }}
+      </h2>
+    </div>
 
-    <a
-      aria-disabled="true"
-      class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
-    >
-      Products
-    </a>
-
-    <a
-      aria-disabled="true"
-      class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
-      href="/permissionpage"
-    >
-      Permission
-    </a>
-    
+    <div class="items-center hidden ml-auto space-x-2 sm:flex">
+      <div>
+        <h6>
+          Eugene Opeyemi
+        </h6>
+        <h6 class="text-xs text-end text-[#373B4D]">
+          Administrator
+        </h6>
+      </div>
+      <UserNav />
+    </div>
   </nav>
 </template>

@@ -1,53 +1,62 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import Errorpage404 from '../views/Errorpage.vue'
-import configuration from '../views/configuration.vue'
-import user from '../views/user.vue'
-import appuser from '../views/appuser.vue'
+import SuperAdminLogin from '../views/SuperAdminLogin.vue'
+import Errorpage404 from '../views/ErrorPage.vue'
+import configuration from '../views/UserConfiguration.vue'
+import user from '../views/UserHub.vue'
+import appuser from '../views/CreateUser.vue'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: { requiresAuth: true } ,
+    
   },
   {
-    path: '/login',
-    name: 'login',
-    component: LoginView
+    path: '/super-admin-login',
+    name: 'super-admin-login',
+    component: SuperAdminLogin,
+        meta: { hideSidebar: true } 
   },
 
   {
     path: '/errorpage',
     name: 'error',
-    component: Errorpage404
+    component: Errorpage404,
+    meta: { hideSidebar: true } ,
   },
 
   {
     path: '/configuration',
     name: 'configuration',
-    component: configuration
+    component: configuration,
+    meta: { requiresAuth: true } 
   },
 
   {
     path: '/user',
     name: 'user',
-    component: user
+    component: user,
+    meta: { requiresAuth: true } 
   },
 
   {
-    path: '/appuser',
-    name: 'appuser',
-    component: appuser
+    path: '/create-user',
+    name: 'create-user',
+    component: appuser,
+    meta: { requiresAuth: true } 
   },
 
   // Added the wildcard route for handling 404 errors here
   {
     path: '/:catchAll(.*)',
     name: 'not-found',
-    component: Errorpage404
+    component: Errorpage404,
+    meta: { hideSidebar: true } 
   }
 ]
 
@@ -55,5 +64,18 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
+
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = useSuperAdminStore().token !== '';
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth && !isAuthenticated) {
+    next({ name: 'super-admin-login' }); // Redirect to login if not authenticated
+  } else {
+    next(); // Continue navigation
+  }
+});
+
 
 export default router
