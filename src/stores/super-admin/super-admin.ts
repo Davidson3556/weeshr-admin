@@ -79,6 +79,7 @@ export const useSuperAdminStore = defineStore({
         this.clearToken();
          router.push({ name: 'super-admin-login' });
         toast({
+          // eslint-disable-next-line
           title: error.response.data.message || 'An error occurred', 
           variant: "destructive",
         });
