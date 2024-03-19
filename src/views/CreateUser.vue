@@ -7,9 +7,6 @@ import * as z from 'zod'
 import { useDateFormat, useNow } from '@vueuse/core'
 import MainNav from '@/components/MainNav.vue'
 
-
-
-
 import {
   Sheet,
   SheetContent,
@@ -32,20 +29,23 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 
-
-
 const formSchema = toTypedSchema(
   z.object({
-    firstName: z.string({
+    firstName: z
+      .string({
         required_error: 'Please enter user first name'
-      }).min(2).max(50),
-      lastName: z.string({
+      })
+      .min(2)
+      .max(50),
+    lastName: z
+      .string({
         required_error: 'Please enter user last name'
-      }).min(2).max(50),
+      })
+      .min(2)
+      .max(50),
     userEmail: z.string().email(),
     dob: z.string(),
-    gender: z.enum(['Male', 'Female']),
-    
+    gender: z.enum(['Male', 'Female'])
   })
 )
 
@@ -53,13 +53,12 @@ const { handleSubmit } = useForm({
   validationSchema: formSchema
 })
 
-
 const newUser = ref({
   firstName: '',
   userEmail: '',
   lastName: '',
   gender: '',
-  dob: '',
+  dob: ''
 })
 
 const users = ref([
@@ -72,11 +71,6 @@ const users = ref([
   }
 ])
 
-
-
-
-
-
 const onSubmit = handleSubmit(async (values) => {
   const user = {
     firstName: values.firstName,
@@ -88,7 +82,6 @@ const onSubmit = handleSubmit(async (values) => {
 
   users.value.push(user)
 
-
   toast({
     title: 'You submitted the following values:',
     description: JSON.stringify(values, null, 2)
@@ -99,7 +92,7 @@ const onSubmit = handleSubmit(async (values) => {
     lastName: '',
     userEmail: '',
     gender: '',
-    dob: '',
+    dob: ''
   }
 })
 
@@ -204,8 +197,8 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   <FormMessage />
                 </FormItem>
               </FormField> -->
-              
-<!-- 
+
+              <!-- 
               <FormField v-slot="{ componentField }" name="gender">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">User gender</FormLabel>
@@ -224,9 +217,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </FormItem>
               </FormField> -->
 
-              <Button type="submit">
-                Submit
-              </Button>
+              <Button type="submit"> Submit </Button>
             </form>
           </CardContent>
         </SheetContent>
