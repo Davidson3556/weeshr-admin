@@ -2,9 +2,7 @@
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
-    CardTitle,
   } from '@/components/ui/card'
 import UserNav from '@/components/UserNav.vue'
 
@@ -27,10 +25,8 @@ import UserNav from '@/components/UserNav.vue'
 </div>
 
 <div class="flex items-center ml-auto space-x-4">
-  <p class="font-semibold tracking-tight text-gray-800">Abiola Waltz<UserNav/>
+  <p class="font-semibold tracking-tight text-gray-800">Abiola Waltz </p> <UserNav/>
     <p class="ml-4 text-xs font-normal tracking-tight ">Adminstrator</p>
-  </p>
-  
   
 </div>
 

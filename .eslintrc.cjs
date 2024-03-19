@@ -11,5 +11,15 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
-  }
+  },
+  ignorePatterns: ['node_modules/', 'dist/',  './src/components/ui'],
+  overrides: [
+    {
+      files: ['./src/components/ui'],  // Change this to default.vue path
+      rules: {
+        'vue/multi-word-component-names': 'off',
+      }
+    }
+  ]
+
 }

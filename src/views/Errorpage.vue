@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 </script>
 <template>
-  <div class="w-full h-screen flex flex-col items-center justify-center">
+  <div class="flex flex-col items-center justify-center w-full h-screen">
     <svg
       class="max-w-full"
       width="100%"
@@ -95,14 +95,14 @@ import { Button } from '@/components/ui/button'
     </svg>
 
     <div class="flex flex-col items-center justify-center mb-5 mt-100">
-      <p class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mt-">Page not Found</p>
-      <p class="text-center md:text-lg xl:text-xl text-gray-500 mt-4">
+      <p class="text-2xl font-bold text-gray-800 md:text-3xl lg:text-4xl mt-">Page not Found</p>
+      <p class="mt-4 text-center text-gray-500 md:text-lg xl:text-xl">
         Oops! looks like you followed a bad link. If you think there's a problem with us, please
         tell us.
       </p>
     </div>
     <Button class="w-auto sm:w-auto bg-lime-400 hover:bg-lime-500">
-      <a href="/" class="block p-4 text-black font-bold"> Home </a>
+      <a href="/" class="block p-4 font-bold text-black"> Home </a>
     </Button>
   </div>
 </template>

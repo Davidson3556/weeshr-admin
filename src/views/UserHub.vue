@@ -2,15 +2,12 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
+  
 } from '@/components/ui/card'
 
 import MainNav from '@/components/MainNav.vue'
 
-import { useDateFormat, useNow } from "@vueuse/core";
-const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
 import DashboardFooter from '@/components/DashboardFooter.vue';
 
 

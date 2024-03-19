@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Search from '@/components/UseSearch.vue'
-import UserNav from '@/components/UserNav.vue'
 import { ref } from 'vue'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -8,62 +7,13 @@ import * as z from 'zod'
 import { useDateFormat, useNow } from '@vueuse/core'
 import MainNav from '@/components/MainNav.vue'
 
-const superAdminStore = useSuperAdminStore()
-
-const formSchema = toTypedSchema(
-  z.object({
-    firstName: z.string({
-        required_error: 'Please enter user first name'
-      }).min(2).max(50),
-      lastName: z.string({
-        required_error: 'Please enter user last name'
-      }).min(2).max(50),
-    userEmail: z.string().email(),
-    gender: z.enum(['Male', 'Female'])
-  })
-)
-
-const { handleSubmit } = useForm({
-  validationSchema: formSchema
-})
 
 
-const newUser = ref({
-  firstName: '',
-  userEmail: '',
-  lastName: '',
-  gender: ''
-})
-
-const users = ref([
-  {
-    firstName: '@horrison',
-    userEmail: 'alisha@gmail.com',
-    gender: 'Vendor',
-    dateJoined: '01 Nov 2011',
-    status: true
-  }
-])
-
-// Define search query
-const searchQuery = ref('')
-
-const searchUsers = () => {
-  // Filter users based on the search query
-  return users.value.filter((user) => {
-    const firstNameMatch = user.firstName.toLowerCase().includes(searchQuery.value.toLowerCase())
-    const emailMatch = user.userEmail.toLowerCase().includes(searchQuery.value.toLowerCase())
-    return firstNameMatch || emailMatch
-  })
-}
-
-import { Select } from '@/components/ui/select'
 
 import {
   Sheet,
   SheetContent,
   SheetHeader,
-  SheetTitle,
   SheetDescription,
   SheetTrigger
 } from '@/components/ui/sheet'
@@ -81,7 +31,53 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
-import { useSuperAdminStore } from '@/stores/super-admin'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
+
+
+const superAdminStore = useSuperAdminStore()
+
+const formSchema = toTypedSchema(
+  z.object({
+    firstName: z.string({
+        required_error: 'Please enter user first name'
+      }).min(2).max(50),
+      lastName: z.string({
+        required_error: 'Please enter user last name'
+      }).min(2).max(50),
+    userEmail: z.string().email(),
+    dob: z.string(),
+    gender: z.enum(['Male', 'Female']),
+    
+  })
+)
+
+const { handleSubmit } = useForm({
+  validationSchema: formSchema
+})
+
+
+const newUser = ref({
+  firstName: '',
+  userEmail: '',
+  lastName: '',
+  gender: '',
+  dob: '',
+})
+
+const users = ref([
+  {
+    firstName: '@horrison',
+    userEmail: 'alisha@gmail.com',
+    gender: 'Vendor',
+    dateJoined: '01 Nov 2011',
+    status: true
+  }
+])
+
+
+
+
+
 
 const onSubmit = handleSubmit(async (values) => {
   const user = {
@@ -105,7 +101,8 @@ const onSubmit = handleSubmit(async (values) => {
     firstName: '',
     lastName: '',
     userEmail: '',
-    gender: ''
+    gender: '',
+    dob: '',
   }
 })
 
@@ -200,6 +197,18 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </FormItem>
               </FormField>
 
+              <!-- <FormField v-slot="{ componentField }" name="dob">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">Email</FormLabel>
+                  <FormControl>
+                    <useSuperAdminStore></useSuperAdminStore>
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              </FormField> -->
+              
+<!-- 
               <FormField v-slot="{ componentField }" name="gender">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">User gender</FormLabel>
@@ -216,7 +225,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              </FormField>
+              </FormField> -->
 
               <Button type="submit">
                 Submit
@@ -281,3 +290,4 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
     </Card>
   </div>
 </template>
+@/stores/super-admin/super-admin@/stores/super-admin/super-admin

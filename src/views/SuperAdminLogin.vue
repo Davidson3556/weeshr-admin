@@ -11,7 +11,6 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle
@@ -19,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/toast'
 import router from '@/router'
-import { useSuperAdminStore } from '@/stores/super-admin'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 import axios from 'axios'
 
 const currentYear = ref(new Date().getFullYear())
@@ -37,11 +36,7 @@ onMounted(() => {
 
 const loading = ref(false)
 
-const backgroundImages = [
-  'https://res.cloudinary.com/drykej1am/image/upload/v1703539604/weeshr_admin/cltgg7aorzfbku6tcodq.jpg',
-  'https://res.cloudinary.com/drykej1am/image/upload/v1703539599/weeshr_admin/zwyzwma2zqddwczmvtrq.jpg',
-  'https://res.cloudinary.com/drykej1am/image/upload/v1703539593/weeshr_admin/ovd0fdxnikreyt3ya2w3.jpg'
-]
+
 
 const quotes = [
   'Weehr App turns my ordinary moments into extraordinary 🌟 memories...',
@@ -53,12 +48,8 @@ const quotes = [
 
 const authors = ['Chloe Thompson', 'Mason Carter', 'Isabella Scott', 'Noah Adams', 'Ava Miller']
 
-const backgroundImage = ref(getRandomImage())
 
-function getRandomImage() {
-  const randomIndex = Math.floor(Math.random() * backgroundImages.length)
-  return backgroundImages[randomIndex]
-}
+
 
 const quote = ref<string>('')
 const author = ref<string>('')
@@ -123,7 +114,7 @@ const onSubmit = form.handleSubmit(async () => {
 
         router.push({ name: 'home' })
       } else {
-        router.push({ name: 'login' })
+        router.push({ name: 'super-admin-login' })
       }
 
       // Redirect to home page after successful login
@@ -146,9 +137,7 @@ const onSubmit = form.handleSubmit(async () => {
   }
 })
 
-// Accessing the username and password directly from the store's state
-const getUsername = superAdminStore.userEmail
-const getPassword = superAdminStore.password
+
 </script>
 
 <template>
@@ -303,4 +292,4 @@ const getPassword = superAdminStore.password
   width: -webkit-fill-available;
   width: -moz-available;
 }
-</style>
+</style>@/stores/super-admin/super-admin@/stores/super-admin/super-admin

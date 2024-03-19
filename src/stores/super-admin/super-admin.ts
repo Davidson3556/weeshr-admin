@@ -72,12 +72,12 @@ export const useSuperAdminStore = defineStore({
         this.clearToken();
         useGeneralStore().setLoading(false);
 
-        router.push({ name: 'login' });
+        router.push({ name: 'super-admin-login' });
       } catch (error) {
         useGeneralStore().setLoading(false);
 
         this.clearToken();
-         router.push({ name: 'login' });
+         router.push({ name: 'super-admin-login' });
         toast({
           title: error.response.data.message || 'An error occurred', 
           variant: "destructive",

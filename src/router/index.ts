@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import Errorpage404 from '../views/Errorpage.vue'
+import SuperAdminLogin from '../views/SuperAdminLogin.vue'
+import Errorpage404 from '../views/ErrorPage.vue'
 import configuration from '../views/UserConfiguration.vue'
 import user from '../views/UserHub.vue'
 import appuser from '../views/CreateUser.vue'
-import { useSuperAdminStore } from '@/stores/super-admin'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 
 
 const routes = [
@@ -17,9 +17,9 @@ const routes = [
     
   },
   {
-    path: '/login',
-    name: 'login',
-    component: LoginView,
+    path: '/super-admin-login',
+    name: 'super-admin-login',
+    component: SuperAdminLogin,
         meta: { hideSidebar: true } 
   },
 
@@ -71,7 +71,7 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if (requiresAuth && !isAuthenticated) {
-    next({ name: 'login' }); // Redirect to login if not authenticated
+    next({ name: 'super-admin-login' }); // Redirect to login if not authenticated
   } else {
     next(); // Continue navigation
   }

@@ -3,7 +3,7 @@ import { Icon } from '@iconify/vue'
 
 
 
-import { useSuperAdminStore } from '@/stores/super-admin'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 
 const superAdminStore = useSuperAdminStore()
 
@@ -283,3 +283,4 @@ nav.main-menu li.active > a,
   height: 100%;
 }
 </style>
+@/stores/super-admin/super-admin@/stores/super-admin/super-admin

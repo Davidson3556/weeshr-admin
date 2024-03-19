@@ -13,7 +13,7 @@ import {
 
 } from '@/components/ui/dropdown-menu'
 
-import { useSuperAdminStore } from '@/stores/super-admin'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 
 const superAdminStore = useSuperAdminStore()
 
@@ -66,4 +66,4 @@ const logout = async () => {
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
-</template>
+</template>@/stores/super-admin/super-admin@/stores/super-admin/super-admin
