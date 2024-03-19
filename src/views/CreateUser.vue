@@ -31,10 +31,8 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
-import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 
 
-const superAdminStore = useSuperAdminStore()
 
 const formSchema = toTypedSchema(
   z.object({
@@ -90,7 +88,6 @@ const onSubmit = handleSubmit(async (values) => {
 
   users.value.push(user)
 
-  superAdminStore.addNewUser(user)
 
   toast({
     title: 'You submitted the following values:',

@@ -118,9 +118,8 @@ const onSubmit = form.handleSubmit(async () => {
       }
 
       // Redirect to home page after successful login
-    } catch (error) {
+    } catch (error: any) {
       loading.value = false
-      console.error('Error occurred during login:', error)
       // Handle login errors, such as displaying error messages to the user
       toast({
         title: error.response.data.message || 'An error occurred',

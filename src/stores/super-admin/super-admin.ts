@@ -73,7 +73,7 @@ export const useSuperAdminStore = defineStore({
         useGeneralStore().setLoading(false);
 
         router.push({ name: 'super-admin-login' });
-      } catch (error) {
+      } catch (error:any) {
         useGeneralStore().setLoading(false);
 
         this.clearToken();
