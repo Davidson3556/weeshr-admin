@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import SuperAdminLogin from '../views/SuperAdminLogin.vue'
-import Errorpage404 from '../views/ErrorPage.vue'
 import configuration from '../views/UserConfiguration.vue'
 import user from '../views/UserHub.vue'
 import appuser from '../views/CreateUser.vue'
 import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
+import ErrorPage from '../views/Errorpage.vue'
 
 
 const routes = [
@@ -26,7 +26,7 @@ const routes = [
   {
     path: '/errorpage',
     name: 'error',
-    component: Errorpage404,
+    component: ErrorPage,
     meta: { hideSidebar: true } ,
   },
 
@@ -55,7 +55,7 @@ const routes = [
   {
     path: '/:catchAll(.*)',
     name: 'not-found',
-    component: Errorpage404,
+    component: ErrorPage,
     meta: { hideSidebar: true } 
   }
 ]
