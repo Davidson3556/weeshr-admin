@@ -44,10 +44,10 @@ interface User {
   gender: string;
   userEmail: string;
   dob: string;
-  phone: {
-    countryCode: string;
+  
+
     phoneNumber: string;
-  };
+  
   
   dateJoined?: string;
   status: boolean;
