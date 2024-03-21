@@ -81,7 +81,7 @@ const userToAdd = {
   dateJoined: '2024-03-21',
   status: true,
   phone: { countryCode: '234', phoneNumber: '3429930834594' },
-
+category: 'Admin',
 };
 
 createUserStore.addUser(userToAdd);
@@ -326,16 +326,22 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
               <TableHead>Email</TableHead>
               <TableHead>Phonenumber</TableHead>
               <TableHead> Onboardrd</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead> Category</TableHead>
+             <TableHead> Category</TableHead> 
+             <TableHead>Status</TableHead>
+              
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow v-for="user in createUserStore.users" :key="user.firstName">
         <TableCell class="font-medium">{{fullName(user) }}</TableCell>
         <TableCell>{{ user.userEmail }}</TableCell>
-        <TableCell>{{ user.gender }}</TableCell>
-        <TableCell>{{ user.dateJoined }}</TableCell>
+        <TableCell>{{ user.phoneNumber }}</TableCell>
+            <TableCell>{{ user.dateJoined }}</TableCell>
+            <TableCell>{{ user.category }}</TableCell>
+            
+
+
+
         <TableCell>
           <button
             @click="toggleStatus(user)"
