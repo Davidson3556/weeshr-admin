@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import Search from '@/components/UseSearch.vue'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useDateFormat, useNow } from '@vueuse/core'
 import MainNav from '@/components/MainNav.vue'
+import { format } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-vue-next'
+import { h } from 'vue'
+import { useCreateUserStore } from '@/stores/create-user/create-user'
+import axios from 'axios'
+
+
+const createUserStore = useCreateUserStore();
 
 import {
   Sheet,
@@ -24,10 +32,14 @@ import {
   TableHead
 } from '@/components/ui/table'
 
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
+import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
 
 const formSchema = toTypedSchema(
   z.object({
@@ -44,57 +56,64 @@ const formSchema = toTypedSchema(
       .min(2)
       .max(50),
     userEmail: z.string().email(),
-    dob: z.string(),
-    gender: z.enum(['Male', 'Female'])
+    dob: z.date({
+      required_error: 'A date of birth is required.'
+    }),
+    gender: z.enum(['Male', 'Female']),
+    phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/)
   })
 )
-
 const { handleSubmit } = useForm({
   validationSchema: formSchema
 })
 
-const newUser = ref({
-  firstName: '',
-  userEmail: '',
-  lastName: '',
-  gender: '',
-  dob: ''
-})
 
-const users = ref([
-  {
-    firstName: '@horrison',
-    userEmail: 'alisha@gmail.com',
-    gender: 'Vendor',
-    dateJoined: '01 Nov 2011',
-    status: true
-  }
-])
+const fullName = (user: { firstName: string; lastName: string }) => {
+  return `${user.firstName} ${user.lastName}`;
+};
+const userToAdd = {
+  firstName: 'disabled',
+  lastName: 'test_admin_d',
+  userEmail: 'test_admin_d@gmail.com',
+  gender: 'Male',
+  dob: '1990-03-22',
+  phoneNumber: '123-456-7890',
+  dateJoined: '2024-03-21',
+  status: true,
+  phone: { countryCode: '234', phoneNumber: '3429930834594' },
 
-const onSubmit = handleSubmit(async (values) => {
+};
+
+createUserStore.addUser(userToAdd);
+
+
+
+
+
+const onSubmit = handleSubmit(async () => {
   const user = {
-    firstName: values.firstName,
-    userEmail: values.userEmail,
-    gender: newUser.value.gender as 'Vendor' | 'Admin',
+    firstName: createUserStore.firstName,
+    lastName: createUserStore.lastName,
+    userEmail: createUserStore.userEmail,
+    gender: createUserStore.gender,
+    dob: createUserStore.dob,
+    phoneNumber: createUserStore.phoneNumber,
     dateJoined: formattedDate.value,
     status: true
   }
-
-  users.value.push(user)
-
-  toast({
-    title: 'You submitted the following values:',
-    description: JSON.stringify(values, null, 2)
-  })
-
-  newUser.value = {
-    firstName: '',
-    lastName: '',
-    userEmail: '',
-    gender: '',
-    dob: ''
-  }
+  createUserStore.addUser(user);
+  createUserStore.resetForm();
 })
+
+watchEffect(() => {
+  const user = {
+    firstName: createUserStore.firstName,
+    lastName: createUserStore.lastName,
+  };
+  fullName(user); // Call fullName function with the user object
+});
+
+
 
 const toggleStatus = (user: { status: boolean }) => {
   user.status = !user.status
@@ -105,7 +124,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
 <template>
   <div class="flex-col flex bg-[#f0f8ff] min-h-[100vh] px-4 sm:px-10">
     <MainNav class="mx-6" headingText="User" />
-    <div class="px-10 py-10 ml-auto">
+    <div class="px-10 py-10 ml-auto" style="max-height: 80vh">
       <Sheet>
         <SheetTrigger as-child>
           <button class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
@@ -127,7 +146,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
             </div>
           </button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent class="overflow-y-auto">
           <SheetHeader>
             <h3 class="text-2xl font-medium">Create User profile</h3>
             <SheetDescription>
@@ -186,6 +205,52 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   <FormMessage />
                 </FormItem>
               </FormField>
+              <FormField v-slot="{ componentField, value }" name="dob">
+                <FormItem class="flex flex-col">
+                  <FormLabel>Date of birth</FormLabel>
+                  <Popover>
+                    <PopoverTrigger as-child>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          :class="
+                            cn(
+                              'w-[240px] ps-3 text-start font-normal',
+                              !value && 'text-muted-foreground'
+                            )
+                          "
+                        >
+                          <span>{{ value ? format(value, 'PPP') : 'Pick a date' }}</span>
+                          <CalendarIcon class="ms-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent class="p-0">
+                      <Calendar v-bind="componentField" />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                  <!-- Ensure FormMessage has appropriate content -->
+                </FormItem>
+              </FormField>
+
+              <FormField v-slot="{ componentField }" name="phonenumber">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="number"
+                      type="tel"
+                      placeholder="Phone Number"
+                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      title="Phone number must be in the format XXX-XXX-XXXX"
+                      class="appearance-none border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus-visible:ring-blue-600"
+                    />
+                  </FormControl>
+
+                  <FormMessage for="phonenumber" />
+                </FormItem>
+              </FormField>
 
               <!-- <FormField v-slot="{ componentField }" name="dob">
                 <FormItem v-auto-animate>
@@ -198,13 +263,30 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </FormItem>
               </FormField> -->
 
-              <!-- 
+              <FormField v-slot="{ componentField }" name="category">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">Category</FormLabel>
+                  <FormControl>
+                    <select
+                      v-model="createUserStore.category"
+                      id="category"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    >
+                      v-bind="componentField"
+                      <option value="Vendor">Vendor</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+
               <FormField v-slot="{ componentField }" name="gender">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">User gender</FormLabel>
                   <FormControl>
                     <select
-                      v-model="newUser.gender"
+                      v-model="createUserStore.gender"
                       id="gender"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     >
@@ -215,7 +297,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              </FormField> -->
+              </FormField>
 
               <Button type="submit"> Submit </Button>
             </form>
@@ -240,33 +322,33 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
             <TableRow
               class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200"
             >
-              <TableHead> Users </TableHead>
+              <TableHead> Full Name </TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>gender</TableHead>
-              <TableHead>Onboarded</TableHead>
+              <TableHead>Phonenumber</TableHead>
+              <TableHead> Onboardrd</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead> </TableHead>
+              <TableHead> Category</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="user in users" :key="user.firstName">
-              <TableCell class="font-medium">{{ user.firstName }}</TableCell>
-              <TableCell>{{ user.userEmail }}</TableCell>
-              <TableCell>{{ user.gender }}</TableCell>
-              <TableCell>{{ user.dateJoined }}</TableCell>
-              <TableCell>
-                <button
-                  @click="toggleStatus(user)"
-                  :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
-                  class="px-4 py-2 text-sm text-white rounded-md"
-                >
-                  {{ user.status ? 'Active' : 'Inactive' }}
-                </button>
-              </TableCell>
-              <TableCell>
+            <TableRow v-for="user in createUserStore.users" :key="user.firstName">
+        <TableCell class="font-medium">{{fullName(user) }}</TableCell>
+        <TableCell>{{ user.userEmail }}</TableCell>
+        <TableCell>{{ user.gender }}</TableCell>
+        <TableCell>{{ user.dateJoined }}</TableCell>
+        <TableCell>
+          <button
+            @click="toggleStatus(user)"
+            :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
+            class="px-4 py-2 text-sm text-white rounded-md"
+          >
+            {{ user.status ? 'Active' : 'Inactive' }}
+          </button>
+        </TableCell>
+        <TableCell>
                 <!-- <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
-                    stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
+                     stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
                     stroke-linejoin="round" />
                 </svg> -->
                 <!-- Add any action button or link here -->
@@ -278,4 +360,4 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
     </Card>
   </div>
 </template>
-@/stores/super-admin/super-admin@/stores/super-admin/super-admin
+@/stores/super-admin/super-admin@/stores/super-admin/super-admin@/stores/Create-User/create-user@/stores/create-user/Create-User
