@@ -13,8 +13,24 @@ import { useCreateUserStore } from '@/stores/create-user/create-user'
 import axios from 'axios'
 
 
-const createUserStore = useCreateUserStore();
+// Fetch user data from the API
+async function fetchUsers() {
+  try {
+    const response = await axios.get('/api/users');
+    users.value = response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+}
 
+
+
+// Call fetchUsers when the component is mounted
+fetchUsers();
+
+
+const createUserStore = useCreateUserStore();
+const users = ref([]);
 import {
   Sheet,
   SheetContent,
@@ -111,6 +127,7 @@ watchEffect(() => {
     lastName: createUserStore.lastName,
   };
   fullName(user); // Call fullName function with the user object
+  
 });
 
 
