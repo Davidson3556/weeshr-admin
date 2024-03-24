@@ -82,7 +82,8 @@ const formSchema = toTypedSchema(
     category: z.string(),
 
     gender: z.string(),
-    phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/)
+    phoneNumber: z.string().regex(/^\d+$/)
+
   })
 )
 const { handleSubmit } = useForm({
@@ -319,6 +320,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                       placeholder="Phone Number"
                       pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                       title="Phone number must be in the format XXX-XXX-XXXX"
+                      v-bind="componentField"
                       class="appearance-none border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus-visible:ring-blue-600"
                     />
                   </FormControl>
