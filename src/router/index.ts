@@ -7,6 +7,7 @@ import appuser from '../views/CreateUser.vue'
 import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 import ErrorPage from '../views/Errorpage.vue'
 
+
 const routes = [
   {
     path: '/',
@@ -28,6 +29,8 @@ const routes = [
     meta: { hideSidebar: true }
   },
 
+ 
+  
   {
     path: '/configuration',
     name: 'configuration',

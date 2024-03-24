@@ -10,7 +10,14 @@ import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { h } from 'vue'
 import { useCreateUserStore } from '@/stores/create-user/create-user'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/toast'
+import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
+import { Loader2 } from 'lucide-vue-next'
+
 
 
 // Fetch user data from the API
@@ -39,6 +46,7 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet'
 
+
 import {
   Table,
   TableRow,
@@ -50,12 +58,8 @@ import {
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { toast } from '@/components/ui/toast'
-import { Calendar } from '@/components/ui/calendar'
-import { cn } from '@/lib/utils'
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+
 
 const formSchema = toTypedSchema(
   z.object({
@@ -75,14 +79,18 @@ const formSchema = toTypedSchema(
     dob: z.date({
       required_error: 'A date of birth is required.'
     }),
-    gender: z.enum(['Male', 'Female']),
+    category: z.string(),
+
+    gender: z.string(),
     phoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/)
   })
 )
 const { handleSubmit } = useForm({
-  validationSchema: formSchema
+  validationSchema: formSchema,
 })
 
+
+const loading = ref(false); // Initialize loading state
 
 const fullName = (user: { firstName: string; lastName: string }) => {
   return `${user.firstName} ${user.lastName}`;
@@ -106,7 +114,10 @@ createUserStore.addUser(userToAdd);
 
 
 
-const onSubmit = handleSubmit(async () => {
+
+const onSubmit = handleSubmit(async (values) => {
+  loading.value = true;
+  
   const user = {
     firstName: createUserStore.firstName,
     lastName: createUserStore.lastName,
@@ -116,10 +127,58 @@ const onSubmit = handleSubmit(async () => {
     phoneNumber: createUserStore.phoneNumber,
     dateJoined: formattedDate.value,
     status: true
+  };
+
+  try {
+    // Send form data to the backend
+    await axios.post('/api/addUser', values);
+    
+    // Clear form fields
+    // resetForm(); // You need to define this function in your useForm hook
+    // Optionally, you can fetch the updated list of users
+    fetchUsers();
+    
+    // Show success message
+    toast({
+      title: 'Success',
+      description: 'User added successfully',
+      variant: 'success'
+    });
+  } catch (error: any) {
+    loading.value = false;
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        if (axiosError.response.data && typeof axiosError.response.data === 'object') {
+          const responseData = axiosError.response.data as { message?: string };     
+          toast({
+            title: responseData.message || 'An error occurred',
+            variant: 'destructive'
+          });
+        } else {
+          toast({
+            title: 'An error occurred',
+            variant: 'destructive'
+          });
+        }
+      } else {
+        toast({
+          title: 'An error occurred',
+          variant: 'destructive'
+        });
+      }
+    }
   }
+
+  toast({
+    title: 'You submitted the following values:',
+    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
+  });
+
   createUserStore.addUser(user);
   createUserStore.resetForm();
-})
+});
+
 
 watchEffect(() => {
   const user = {
@@ -250,7 +309,6 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   <!-- Ensure FormMessage has appropriate content -->
                 </FormItem>
               </FormField>
-
               <FormField v-slot="{ componentField }" name="phonenumber">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Phone Number</FormLabel>
@@ -269,6 +327,8 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </FormItem>
               </FormField>
 
+             
+
               <!-- <FormField v-slot="{ componentField }" name="dob">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Email</FormLabel>
@@ -285,11 +345,11 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   <FormLabel class="text-blue-900">Category</FormLabel>
                   <FormControl>
                     <select
-                      v-model="createUserStore.category"
+                    v-bind="componentField"
                       id="category"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    >
-                      v-bind="componentField"
+                      placeholder="Select a category" >
+                      <option value="" disabled selected hidden>Select a category</option>
                       <option value="Vendor">Vendor</option>
                       <option value="Admin">Admin</option>
                     </select>
@@ -302,12 +362,13 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">User gender</FormLabel>
                   <FormControl>
-                    <select
-                      v-model="createUserStore.gender"
+                    <select 
+                    v-bind="componentField"
                       id="gender"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    >
-                      v-bind="componentField"
+                     placeholder="Select a category"   >
+                 
+                      <option value="" disabled selected hidden>Select a category</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                     </select>
@@ -316,7 +377,11 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </FormItem>
               </FormField>
 
-              <Button type="submit"> Submit </Button>
+              <Button type="submit"
+              > Submit
+                
+                <Loader2 v-if="loading" class="w-4 h-4 mr-2 text-black animate-spin" />
+ </Button>
             </form>
           </CardContent>
         </SheetContent>
