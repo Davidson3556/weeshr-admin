@@ -18,26 +18,21 @@ import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-vue-next'
 
-
-
 // Fetch user data from the API
 async function fetchUsers() {
   try {
-    const response = await axios.get('/api/users');
-    users.value = response.data;
+    const response = await axios.get('/api/users')
+    users.value = response.data
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching users:', error)
   }
 }
 
-
-
 // Call fetchUsers when the component is mounted
-fetchUsers();
+fetchUsers()
 
-
-const createUserStore = useCreateUserStore();
-const users = ref([]);
+const createUserStore = useCreateUserStore()
+const users = ref([])
 import {
   Sheet,
   SheetContent,
@@ -45,7 +40,6 @@ import {
   SheetDescription,
   SheetTrigger
 } from '@/components/ui/sheet'
-
 
 import {
   Table,
@@ -58,8 +52,14 @@ import {
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
 
 const formSchema = toTypedSchema(
   z.object({
@@ -83,19 +83,17 @@ const formSchema = toTypedSchema(
 
     gender: z.string(),
     phoneNumber: z.string().regex(/^\d+$/)
-
   })
 )
 const { handleSubmit } = useForm({
-  validationSchema: formSchema,
+  validationSchema: formSchema
 })
 
-
-const loading = ref(false); // Initialize loading state
+const loading = ref(false) // Initialize loading state
 
 const fullName = (user: { firstName: string; lastName: string }) => {
-  return `${user.firstName} ${user.lastName}`;
-};
+  return `${user.firstName} ${user.lastName}`
+}
 const userToAdd = {
   firstName: 'disabled',
   lastName: 'test_admin_d',
@@ -106,19 +104,14 @@ const userToAdd = {
   dateJoined: '2024-03-21',
   status: true,
   phone: { countryCode: '234', phoneNumber: '3429930834594' },
-category: 'Admin',
-};
+  category: 'Admin'
+}
 
-createUserStore.addUser(userToAdd);
-
-
-
-
-
+createUserStore.addUser(userToAdd)
 
 const onSubmit = handleSubmit(async (values) => {
-  loading.value = true;
-  
+  loading.value = true
+
   const user = {
     firstName: createUserStore.firstName,
     lastName: createUserStore.lastName,
@@ -128,69 +121,69 @@ const onSubmit = handleSubmit(async (values) => {
     phoneNumber: createUserStore.phoneNumber,
     dateJoined: formattedDate.value,
     status: true
-  };
+  }
 
   try {
     // Send form data to the backend
-    await axios.post('/api/addUser', values);
-    
+    await axios.post('/api/addUser', values)
+
     // Clear form fields
     // resetForm(); // You need to define this function in your useForm hook
     // Optionally, you can fetch the updated list of users
-    fetchUsers();
-    
+    fetchUsers()
+
     // Show success message
     toast({
       title: 'Success',
       description: 'User added successfully',
       variant: 'success'
-    });
+    })
   } catch (error: any) {
-    loading.value = false;
+    loading.value = false
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError;
+      const axiosError = error as AxiosError
       if (axiosError.response) {
         if (axiosError.response.data && typeof axiosError.response.data === 'object') {
-          const responseData = axiosError.response.data as { message?: string };     
+          const responseData = axiosError.response.data as { message?: string }
           toast({
             title: responseData.message || 'An error occurred',
             variant: 'destructive'
-          });
+          })
         } else {
           toast({
             title: 'An error occurred',
             variant: 'destructive'
-          });
+          })
         }
       } else {
         toast({
           title: 'An error occurred',
           variant: 'destructive'
-        });
+        })
       }
     }
   }
 
   toast({
     title: 'You submitted the following values:',
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
-  });
+    description: h(
+      'pre',
+      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))
+    )
+  })
 
-  createUserStore.addUser(user);
-  createUserStore.resetForm();
-});
-
+  createUserStore.addUser(user)
+  createUserStore.resetForm()
+})
 
 watchEffect(() => {
   const user = {
     firstName: createUserStore.firstName,
-    lastName: createUserStore.lastName,
-  };
-  fullName(user); // Call fullName function with the user object
-  
-});
-
-
+    lastName: createUserStore.lastName
+  }
+  fullName(user) // Call fullName function with the user object
+})
 
 const toggleStatus = (user: { status: boolean }) => {
   user.status = !user.status
@@ -329,8 +322,6 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </FormItem>
               </FormField>
 
-             
-
               <!-- <FormField v-slot="{ componentField }" name="dob">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Email</FormLabel>
@@ -347,10 +338,11 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   <FormLabel class="text-blue-900">Category</FormLabel>
                   <FormControl>
                     <select
-                    v-bind="componentField"
+                      v-bind="componentField"
                       id="category"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Select a category" >
+                      placeholder="Select a category"
+                    >
                       <option value="" disabled selected hidden>Select a category</option>
                       <option value="Vendor">Vendor</option>
                       <option value="Admin">Admin</option>
@@ -364,12 +356,12 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">User gender</FormLabel>
                   <FormControl>
-                    <select 
-                    v-bind="componentField"
+                    <select
+                      v-bind="componentField"
                       id="gender"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                     placeholder="Select a category"   >
-                 
+                      placeholder="Select a category"
+                    >
                       <option value="" disabled selected hidden>Select a category</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
@@ -379,11 +371,11 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </FormItem>
               </FormField>
 
-              <Button type="submit"
-              > Submit
-                
+              <Button type="submit">
+                Submit
+
                 <Loader2 v-if="loading" class="w-4 h-4 mr-2 text-black animate-spin" />
- </Button>
+              </Button>
             </form>
           </CardContent>
         </SheetContent>
@@ -410,32 +402,28 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
               <TableHead>Email</TableHead>
               <TableHead>Phonenumber</TableHead>
               <TableHead> Onboardrd</TableHead>
-             <TableHead> Category</TableHead> 
-             <TableHead>Status</TableHead>
-              
+              <TableHead> Category</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow v-for="user in createUserStore.users" :key="user.firstName">
-        <TableCell class="font-medium">{{fullName(user) }}</TableCell>
-        <TableCell>{{ user.userEmail }}</TableCell>
-        <TableCell>{{ user.phoneNumber }}</TableCell>
-            <TableCell>{{ user.dateJoined }}</TableCell>
-            <TableCell>{{ user.category }}</TableCell>
-            
+              <TableCell class="font-medium">{{ fullName(user) }}</TableCell>
+              <TableCell>{{ user.userEmail }}</TableCell>
+              <TableCell>{{ user.phoneNumber }}</TableCell>
+              <TableCell>{{ user.dateJoined }}</TableCell>
+              <TableCell>{{ user.category }}</TableCell>
 
-
-
-        <TableCell>
-          <button
-            @click="toggleStatus(user)"
-            :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
-            class="px-4 py-2 text-sm text-white rounded-md"
-          >
-            {{ user.status ? 'Active' : 'Inactive' }}
-          </button>
-        </TableCell>
-        <TableCell>
+              <TableCell>
+                <button
+                  @click="toggleStatus(user)"
+                  :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
+                  class="px-4 py-2 text-sm text-white rounded-md"
+                >
+                  {{ user.status ? 'Active' : 'Inactive' }}
+                </button>
+              </TableCell>
+              <TableCell>
                 <!-- <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
                      stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
