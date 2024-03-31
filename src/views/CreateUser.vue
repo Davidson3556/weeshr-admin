@@ -6,10 +6,18 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useDateFormat, useNow } from '@vueuse/core'
 import MainNav from '@/components/MainNav.vue'
-
-
-
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+import axios from 'axios'
+import { Loader2 } from 'lucide-vue-next'
+import router from '@/router'
 import {
   Sheet,
   SheetContent,
@@ -31,77 +39,118 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
-
-
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 
 const formSchema = toTypedSchema(
   z.object({
-    firstName: z.string({
-        required_error: 'Please enter user first name'
-      }).min(2).max(50),
-      lastName: z.string({
-        required_error: 'Please enter user last name'
-      }).min(2).max(50),
-    userEmail: z.string().email(),
+    firstName: z
+      .string()
+      .min(2, { message: 'First name must be at least 2 characters long' })
+      .max(50, { message: 'First name cannot be longer than 50 characters' })
+      .nonempty('Please enter user first name'),
+    lastName: z
+      .string()
+      .min(2, { message: 'Last name must be at least 2 characters long' })
+      .max(50, { message: 'Last name cannot be longer than 50 characters' })
+      .nonempty('Please enter user last name'),
+    userEmail: z.string().email('Invalid email address'),
     dob: z.string(),
-    gender: z.enum(['Male', 'Female']),
-    
+    gender: z.string().nonempty('Please select a gender'),
+    status: z.boolean().optional(),
+    phone: z.string()
   })
 )
-
 const { handleSubmit } = useForm({
   validationSchema: formSchema
 })
-
 
 const newUser = ref({
   firstName: '',
   userEmail: '',
   lastName: '',
   gender: '',
-  dob: '',
+  dob: ''
 })
-
-const users = ref([
-  {
-    firstName: '@horrison',
-    userEmail: 'alisha@gmail.com',
-    gender: 'Vendor',
-    dateJoined: '01 Nov 2011',
-    status: true
-  }
-])
-
-
-
-
-
+const sheetOpen = ref(false)
+const loading = ref(false)
+const superAdminStore = useSuperAdminStore()
 
 const onSubmit = handleSubmit(async (values) => {
   const user = {
     firstName: values.firstName,
-    userEmail: values.userEmail,
-    gender: newUser.value.gender as 'Vendor' | 'Admin',
+    lastName: values.lastName,
+    email: values.userEmail,
+    gender: values.gender,
+    dob: values.dob,
+    phone: {
+      countryCode: '+234',
+      phoneNumber: values.phone
+    },
     dateJoined: formattedDate.value,
-    status: true
+    disabled: values.status || true,
+    countryCode: '+234'
   }
 
-  users.value.push(user)
+  await saveUserData(user)
 
+  sheetOpen.value = false
 
+  // Show success toast
   toast({
-    title: 'You submitted the following values:',
-    description: JSON.stringify(values, null, 2)
+    title: 'Success',
+    description: `${values.firstName} User profile created successfully.`,
+    variant: 'success'
   })
 
+  // Reset form fields
   newUser.value = {
     firstName: '',
     lastName: '',
     userEmail: '',
     gender: '',
-    dob: '',
+    dob: ''
   }
 })
+
+// Save user data to the /administrator endpoint
+const saveUserData = async (user: any, token?: string) => {
+  loading.value = true
+  try {
+    const token = sessionStorage.getItem('token') || ''
+    const response = await axios.post('https://api.staging.weeshr.com/api/v1/administrator', user, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    console.log(response.data)
+    loading.value = false
+    // Handle success
+  } catch (error) {
+    loading.value = false
+    if (error.response.data.code === 401) {
+      sessionStorage.removeItem('token')
+      // Clear token from superAdminStore
+      superAdminStore.setToken('')
+
+      setTimeout(() => {
+        router.push({ name: 'super-admin-login' })
+      }, 3000)
+
+      toast({
+        title: 'Unauthorized',
+        description: 'You are not authorized to perform this action. Redirecting to home page...',
+        variant: 'destructive'
+      })
+      // Redirect after 3 seconds
+    } else {
+      toast({
+        title: error.response.data.message || 'An error occurred',
+        variant: 'destructive'
+      })
+    }
+    // Handle other errors
+  }
+}
 
 const toggleStatus = (user: { status: boolean }) => {
   user.status = !user.status
@@ -113,9 +162,9 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
   <div class="flex-col flex bg-[#f0f8ff] min-h-[100vh] px-4 sm:px-10">
     <MainNav class="mx-6" headingText="User" />
     <div class="px-10 py-10 ml-auto">
-      <Sheet>
+      <Sheet :open="sheetOpen">
         <SheetTrigger as-child>
-          <button class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
+          <button @click="sheetOpen = true" class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
             <div class="text-base text-[#F8F9FF] text-center flex items-center">
               Add New User
               <svg
@@ -193,38 +242,86 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   <FormMessage />
                 </FormItem>
               </FormField>
-
-              <!-- <FormField v-slot="{ componentField }" name="dob">
-                <FormItem v-auto-animate>
-                  <FormLabel class="text-blue-900">Email</FormLabel>
-                  <FormControl>
-                    <useSuperAdminStore></useSuperAdminStore>
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              </FormField> -->
-              
-<!-- 
-              <FormField v-slot="{ componentField }" name="gender">
-                <FormItem v-auto-animate>
-                  <FormLabel class="text-blue-900">User gender</FormLabel>
-                  <FormControl>
+              <div class="flex flex-row justify-between gap-2">
+                <FormField v-slot="{ componentField }" name="gender" class="w-[40%]">
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
                     <select
-                      v-model="newUser.gender"
+                      v-bind="componentField"
                       id="gender"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Select a category"
                     >
-                      v-bind="componentField"
+                      <option value="" disabled selected hidden>Gender</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                     </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField> -->
+                    <FormMessage for="gender" />
+                  </FormItem>
+                </FormField>
 
-              <Button type="submit">
+                <div class="w-[70%]">
+                  <FormField v-slot="{ componentField }" name="dob">
+                    <FormItem v-auto-animate>
+                      <FormLabel class="text-blue-900">Date of Birth</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="dob"
+                          type="date"
+                          placeholder="Date of Birth"
+                          class="focus-visible:ring-blue-600"
+                          v-bind="componentField"
+                        />
+                      </FormControl>
+
+                      <FormMessage for="dob" />
+                    </FormItem>
+                  </FormField>
+                </div>
+              </div>
+
+              <FormField v-slot="{ componentField }" name="phone">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">Phone Number</FormLabel>
+                  <FormControl>
+                    <div>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="Phone Number"
+                        class="focus-visible:ring-blue-600"
+                        v-bind="componentField"
+                      />
+                    </div>
+                  </FormControl>
+
+                  <FormMessage for="phone" />
+                </FormItem>
+              </FormField>
+
+              <FormField v-slot="{ componentField }" name="status">
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <select
+                    v-bind="componentField"
+                    id="status"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Status"
+                  >
+                    <option value="" disabled selected hidden>Select user Status</option>
+                    <option :value="true">True</option>
+                    <option :value="false">False</option>
+                  </select>
+                  <FormMessage for="status" />
+                </FormItem>
+              </FormField>
+
+              <Button :disabled="loading" type="submit">
+                <Loader2
+                  color="#ffffff"
+                  v-if="loading"
+                  class="w-4 h-4 mr-2 text-black animate-spin"
+                />
                 Submit
               </Button>
             </form>
