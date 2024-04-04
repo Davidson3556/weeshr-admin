@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Search from '@/components/UseSearch.vue'
-import { ref } from 'vue'
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { useDateFormat, useNow } from '@vueuse/core'
-import MainNav from '@/components/MainNav.vue'
+import Search from "@/components/UseSearch.vue";
+import { onMounted, ref } from "vue";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as z from "zod";
+import { useDateFormat, useNow } from "@vueuse/core";
+import MainNav from "@/components/MainNav.vue";
 import {
   Select,
   SelectContent,
@@ -13,18 +13,18 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
-import axios from 'axios'
-import { Loader2 } from 'lucide-vue-next'
-import router from '@/router'
+  SelectValue,
+} from "@/components/ui/select";
+import axios from "axios";
+import { Loader2 } from "lucide-vue-next";
+import router from "@/router";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetDescription,
-  SheetTrigger
-} from '@/components/ui/sheet'
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 import {
   Table,
@@ -32,48 +32,57 @@ import {
   TableBody,
   TableHeader,
   TableCell,
-  TableHead
-} from '@/components/ui/table'
+  TableHead,
+} from "@/components/ui/table";
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { toast } from '@/components/ui/toast'
-import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
+import { useSuperAdminStore } from "@/stores/super-admin/super-admin";
+import { useGeneralStore } from "@/stores/general-use";
 
 const formSchema = toTypedSchema(
   z.object({
     firstName: z
       .string()
-      .min(2, { message: 'First name must be at least 2 characters long' })
-      .max(50, { message: 'First name cannot be longer than 50 characters' })
-      .nonempty('Please enter user first name'),
+      .min(2, { message: "First name must be at least 2 characters long" })
+      .max(50, { message: "First name cannot be longer than 50 characters" })
+      .nonempty("Please enter your first name"),
     lastName: z
       .string()
-      .min(2, { message: 'Last name must be at least 2 characters long' })
-      .max(50, { message: 'Last name cannot be longer than 50 characters' })
-      .nonempty('Please enter user last name'),
-    userEmail: z.string().email('Invalid email address'),
-    dob: z.string(),
-    gender: z.string().nonempty('Please select a gender'),
+      .min(2, { message: "Last name must be at least 2 characters long" })
+      .max(50, { message: "Last name cannot be longer than 50 characters" })
+      .nonempty("Please enter your last name"),
+    userEmail: z.string().email("Please enter a valid email address"),
+    dob: z.string().nonempty("Please enter your date of birth"),
+    gender: z.string().nonempty("Please select your gender"),
     status: z.boolean().optional(),
-    phone: z.string()
+    phone: z.string().nonempty("Please enter your phone number"),
   })
-)
+);
+
 const { handleSubmit } = useForm({
-  validationSchema: formSchema
-})
+  validationSchema: formSchema,
+});
 
 const newUser = ref({
-  firstName: '',
-  userEmail: '',
-  lastName: '',
-  gender: '',
-  dob: ''
-})
-const sheetOpen = ref(false)
-const loading = ref(false)
-const superAdminStore = useSuperAdminStore()
+  firstName: "",
+  userEmail: "",
+  lastName: "",
+  gender: "",
+  dob: "",
+});
+const sheetOpen = ref(false);
+const loading = ref(false);
+const superAdminStore = useSuperAdminStore();
+const token = sessionStorage.getItem("token") || "";
 
 const onSubmit = handleSubmit(async (values) => {
   const user = {
@@ -83,88 +92,172 @@ const onSubmit = handleSubmit(async (values) => {
     gender: values.gender,
     dob: values.dob,
     phone: {
-      countryCode: '+234',
-      phoneNumber: values.phone
+      countryCode: "+234",
+      phoneNumber: values.phone,
     },
     dateJoined: formattedDate.value,
     disabled: values.status || true,
-    countryCode: '+234'
-  }
+  };
 
-  await saveUserData(user)
+  await saveUserData(user);
 
-  sheetOpen.value = false
+  sheetOpen.value = false;
 
   // Show success toast
-  toast({
-    title: 'Success',
-    description: `${values.firstName} User profile created successfully.`,
-    variant: 'success'
-  })
 
   // Reset form fields
   newUser.value = {
-    firstName: '',
-    lastName: '',
-    userEmail: '',
-    gender: '',
-    dob: ''
-  }
-})
+    firstName: "",
+    lastName: "",
+    userEmail: "",
+    gender: "",
+    dob: "",
+  };
+});
 
-// Save user data to the /administrator endpoint
-const saveUserData = async (user: any, token?: string) => {
-  loading.value = true
+// Define a ref to hold the users data
+// const users = ref([]);
+const users = ref<any[]>([]); // Specify the type as any[] or the correct type of your user objects
+
+// Define a function to fetch users data
+const fetchUsersData = async () => {
+  // useGeneralStore().setLoading(true)
   try {
-    const token = sessionStorage.getItem('token') || ''
-    const response = await axios.post('https://api.staging.weeshr.com/api/v1/administrator', user, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    // Set loading to true
+
+    const response = await axios.get(
+      "https://api.staging.weeshr.com/api/v1/administrators",
+      {
+        params: {
+          search: "test_admin",
+          disabled_status: "disabled",
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    })
-    console.log(response.data)
-    loading.value = false
-    // Handle success
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      useGeneralStore().setLoadingToFalse();
+      // Show success toast
+      toast({
+        title: "Success",
+        description: `data fetched`,
+        variant: "success",
+      });
+
+      console.log("jiji" + JSON.stringify(response.data));
+    }
+
+    // Update the users data with the response
+
+    users.value = response.data.data.data;
   } catch (error) {
-    loading.value = false
-    if (error.response.data.code === 401) {
-      sessionStorage.removeItem('token')
+    if (error.response.status === 401) {
+      sessionStorage.removeItem("token");
       // Clear token from superAdminStore
-      superAdminStore.setToken('')
+      superAdminStore.setToken("");
 
       setTimeout(() => {
-        router.push({ name: 'super-admin-login' })
-      }, 3000)
+        router.push({ name: "super-admin-login" });
+      }, 3000);
 
       toast({
-        title: 'Unauthorized',
-        description: 'You are not authorized to perform this action. Redirecting to home page...',
-        variant: 'destructive'
-      })
+        title: "Unauthorized",
+        description:
+          "You are not authorized to perform this action. Redirecting to home page...",
+        variant: "destructive",
+      });
       // Redirect after 3 seconds
     } else {
       toast({
-        title: error.response.data.message || 'An error occurred',
-        variant: 'destructive'
-      })
+        title: error.response.data.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
+  } finally {
+  }
+}; // Call the fetchUsersData function when the component is mounted
+
+// Save user data to the /administrator endpoint
+const saveUserData = async (user: any) => {
+  loading.value = true;
+  try {
+    const response = await axios.post(
+      "https://api.staging.weeshr.com/api/v1/administrator",
+      user,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Check if response status is 200 or 201
+    if (response.status === 200 || response.status === 201) {
+      // Show success toast
+      toast({
+        title: "Success",
+        description: `${user.firstName} User profile created successfully.`,
+        variant: "success",
+      });
+    }
+
+    console.log(response.data);
+    loading.value = false;
+    // Handle success
+  } catch (error) {
+    loading.value = false;
+    if (error.response.data.code === 401) {
+      sessionStorage.removeItem("token");
+      // Clear token from superAdminStore
+      superAdminStore.setToken("");
+
+      setTimeout(() => {
+        router.push({ name: "super-admin-login" });
+      }, 3000);
+
+      toast({
+        title: "Unauthorized",
+        description:
+          "You are not authorized to perform this action. Redirecting to home page...",
+        variant: "destructive",
+      });
+      // Redirect after 3 seconds
+    } else {
+      toast({
+        title: error.response.data.message || "An error occurred",
+        variant: "destructive",
+      });
     }
     // Handle other errors
   }
-}
+};
 
 const toggleStatus = (user: { status: boolean }) => {
-  user.status = !user.status
-}
-const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
+  user.status = !user.status;
+};
+const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
+
+// onMounted(fetchUsersData);
+
+onMounted(async () => {
+  // useGeneralStore().setLoading(true);
+  fetchUsersData();
+});
 </script>
 
 <template>
   <div class="flex-col flex bg-[#f0f8ff] min-h-[100vh] px-4 sm:px-10">
     <MainNav class="mx-6" headingText="User" />
     <div class="px-10 py-10 ml-auto">
-      <Sheet :open="sheetOpen">
+      <Sheet :close="sheetOpen">
         <SheetTrigger as-child>
-          <button @click="sheetOpen = true" class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
+          <button
+            @click="sheetOpen = true"
+            class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12"
+          >
             <div class="text-base text-[#F8F9FF] text-center flex items-center">
               Add New User
               <svg
@@ -330,14 +423,14 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
       </Sheet>
     </div>
 
-    <Card class="container px-4 pt-6 pb-10 mx-auto sm:px-6 lg:px-8 bg-[#FFFFFF] rounded-2xl">
+    <Card
+      class="container px-4 pt-6 pb-10 mx-auto sm:px-6 lg:px-8 bg-[#FFFFFF] rounded-2xl"
+    >
       <div class="flex items-center justify-between px-6 py-4">
         <div class="text-2xl font-bold tracking-tight text-[#020721]">
           Back Office Users
           <p class="text-xs text-[#02072199] py-2">List of Admin Users</p>
         </div>
-
-        <Search />
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">
@@ -355,7 +448,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="user in users" :key="user.firstName">
+            <TableRow v-for="user in users" :key="user._id">
               <TableCell class="font-medium">{{ user.firstName }}</TableCell>
               <TableCell>{{ user.userEmail }}</TableCell>
               <TableCell>{{ user.gender }}</TableCell>
@@ -366,7 +459,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
-                  {{ user.status ? 'Active' : 'Inactive' }}
+                  {{ user.status ? "Active" : "Inactive" }}
                 </button>
               </TableCell>
               <TableCell>
