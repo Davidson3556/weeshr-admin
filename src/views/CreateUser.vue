@@ -112,10 +112,10 @@ const fetchUsersData = async () => {
     // Set loading to true
 
     const response = await axios.get('https://api.staging.weeshr.com/api/v1/administrators', {
-      params: {
-        search: 'test_admin',
-        disabled_status: 'disabled'
-      },
+      // params: {
+      //   search: 'test_admin',
+      //   disabled_status: 'disabled'
+      // },
       headers: {
         Authorization: `Bearer ${token}`
       }
