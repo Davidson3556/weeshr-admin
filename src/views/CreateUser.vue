@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import Search from "@/components/UseSearch.vue";
-import { ref } from "vue";
-import { useForm } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/zod";
-import * as z from "zod";
-import { useDateFormat, useNow } from "@vueuse/core";
-import MainNav from "@/components/MainNav.vue";
+import Search from '@/components/UseSearch.vue'
+import { ref, onMounted } from 'vue'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+import { useDateFormat, useNow } from '@vueuse/core'
+import MainNav from '@/components/MainNav.vue'
 
-import axios from "axios";
-import { Loader2 } from "lucide-vue-next";
-import router from "@/router";
+import axios from 'axios'
+import { Loader2 } from 'lucide-vue-next'
+import router from '@/router'
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetDescription,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  SheetTrigger
+} from '@/components/ui/sheet'
 
 import {
   Table,
@@ -24,57 +24,51 @@ import {
   TableBody,
   TableHeader,
   TableCell,
-  TableHead,
-} from "@/components/ui/table";
+  TableHead
+} from '@/components/ui/table'
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast";
-import { useSuperAdminStore } from "@/stores/super-admin/super-admin";
-import { useGeneralStore } from "@/stores/general-use";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/toast'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
+import { useGeneralStore } from '@/stores/general-use'
 
 const formSchema = toTypedSchema(
   z.object({
     firstName: z
       .string()
-      .min(2, { message: "First name must be at least 2 characters long" })
-      .max(50, { message: "First name cannot be longer than 50 characters" })
-      .nonempty("Please enter your first name"),
+      .min(2, { message: 'First name must be at least 2 characters long' })
+      .max(50, { message: 'First name cannot be longer than 50 characters' })
+      .nonempty('Please enter your first name'),
     lastName: z
       .string()
-      .min(2, { message: "Last name must be at least 2 characters long" })
-      .max(50, { message: "Last name cannot be longer than 50 characters" })
-      .nonempty("Please enter your last name"),
-    userEmail: z.string().email("Please enter a valid email address"),
-    dob: z.string().nonempty("Please enter your date of birth"),
-    gender: z.string().nonempty("Please select your gender"),
+      .min(2, { message: 'Last name must be at least 2 characters long' })
+      .max(50, { message: 'Last name cannot be longer than 50 characters' })
+      .nonempty('Please enter your last name'),
+    userEmail: z.string().email('Please enter a valid email address'),
+    dob: z.string().nonempty('Please enter your date of birth'),
+    gender: z.string().nonempty('Please select your gender'),
     status: z.boolean().optional(),
-    phone: z.string().nonempty("Please enter your phone number"),
+    phone: z.string().nonempty('Please enter your phone number')
   })
-);
+)
 
 const { handleSubmit } = useForm({
-  validationSchema: formSchema,
-});
+  validationSchema: formSchema
+})
 
 const newUser = ref({
-  firstName: "",
-  userEmail: "",
-  lastName: "",
-  gender: "",
-  dob: "",
-});
-const sheetOpen = ref(false);
-const loading = ref(false);
-const superAdminStore = useSuperAdminStore();
-const token = sessionStorage.getItem("token") || "";
+  firstName: '',
+  userEmail: '',
+  lastName: '',
+  gender: '',
+  dob: ''
+})
+const sheetOpen = ref(false)
+const loading = ref(false)
+const superAdminStore = useSuperAdminStore()
+const token = sessionStorage.getItem('token') || ''
 
 const onSubmit = handleSubmit(async (values) => {
   const user = {
@@ -84,32 +78,32 @@ const onSubmit = handleSubmit(async (values) => {
     gender: values.gender,
     dob: values.dob,
     phone: {
-      countryCode: "+234",
-      phoneNumber: values.phone,
+      countryCode: '+234',
+      phoneNumber: values.phone
     },
     dateJoined: formattedDate.value,
-    disabled: values.status || true,
-  };
+    disabled: values.status || true
+  }
 
-  await saveUserData(user);
+  await saveUserData(user)
 
-  sheetOpen.value = false;
+  sheetOpen.value = false
 
   // Show success toast
 
   // Reset form fields
   newUser.value = {
-    firstName: "",
-    lastName: "",
-    userEmail: "",
-    gender: "",
-    dob: "",
-  };
-});
+    firstName: '',
+    lastName: '',
+    userEmail: '',
+    gender: '',
+    dob: ''
+  }
+})
 
 // Define a ref to hold the users data
 // const users = ref([]);
-const users = ref<any[]>([]); // Specify the type as any[] or the correct type of your user objects
+const users = ref<any[]>([]) // Specify the type as any[] or the correct type of your user objects
 
 // Define a function to fetch users data
 const fetchUsersData = async () => {
@@ -117,127 +111,118 @@ const fetchUsersData = async () => {
   try {
     // Set loading to true
 
-    const response = await axios.get(
-      "https://api.staging.weeshr.com/api/v1/administrators",
-      {
-        params: {
-          search: "test_admin",
-          disabled_status: "disabled",
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await axios.get('https://api.staging.weeshr.com/api/v1/administrators', {
+      params: {
+        search: 'test_admin',
+        disabled_status: 'disabled'
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    );
+    })
 
     if (response.status === 200 || response.status === 201) {
-      useGeneralStore().setLoadingToFalse();
+      useGeneralStore().setLoadingToFalse()
       // Show success toast
       toast({
-        title: "Success",
+        title: 'Success',
         description: `data fetched`,
-        variant: "success",
-      });
+        variant: 'success'
+      })
 
-      console.log("jiji" + JSON.stringify(response.data));
+      console.log('jiji' + JSON.stringify(response.data))
     }
 
     // Update the users data with the response
 
-    users.value = response.data.data.data;
+    users.value = response.data.data.data
   } catch (error: any) {
     if (error.response.status === 401) {
-      sessionStorage.removeItem("token");
+      sessionStorage.removeItem('token')
       // Clear token from superAdminStore
-      superAdminStore.setToken("");
+      superAdminStore.setToken('')
 
       setTimeout(() => {
-        router.push({ name: "super-admin-login" });
-      }, 3000);
+        router.push({ name: 'super-admin-login' })
+      }, 3000)
 
       toast({
-        title: "Unauthorized",
-        description:
-          "You are not authorized to perform this action. Redirecting to home page...",
-        variant: "destructive",
-      });
+        title: 'Unauthorized',
+        description: 'You are not authorized to perform this action. Redirecting to home page...',
+        variant: 'destructive'
+      })
       // Redirect after 3 seconds
     } else {
       toast({
-        title: error.response.data.message || "An error occurred",
-        variant: "destructive",
-      });
+        title: error.response.data.message || 'An error occurred',
+        variant: 'destructive'
+      })
     }
   } finally {
   }
-}; // Call the fetchUsersData function when the component is mounted
+} // Call the fetchUsersData function when the component is mounted
 
 // Save user data to the /administrator endpoint
 const saveUserData = async (user: any) => {
-  loading.value = true;
+  loading.value = true
   try {
-    const response = await axios.post(
-      "https://api.staging.weeshr.com/api/v1/administrator",
-      user,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await axios.post('https://api.staging.weeshr.com/api/v1/administrator', user, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    );
+    })
 
     // Check if response status is 200 or 201
     if (response.status === 200 || response.status === 201) {
       // Show success toast
       toast({
-        title: "Success",
+        title: 'Success',
         description: `${user.firstName} User profile created successfully.`,
-        variant: "success",
-      });
+        variant: 'success'
+      })
     }
 
-    console.log(response.data);
-    loading.value = false;
+    console.log(response.data)
+    loading.value = false
     // Handle success
   } catch (err: any) {
-    loading.value = false;
+    loading.value = false
     if (err.response.data.code === 401) {
-      sessionStorage.removeItem("token");
+      sessionStorage.removeItem('token')
       // Clear token from superAdminStore
-      superAdminStore.setToken("");
+      superAdminStore.setToken('')
 
       setTimeout(() => {
-        router.push({ name: "super-admin-login" });
-      }, 3000);
+        router.push({ name: 'super-admin-login' })
+      }, 3000)
 
       toast({
-        title: "Unauthorized",
-        description:
-          "You are not authorized to perform this action. Redirecting to home page...",
-        variant: "destructive",
-      });
+        title: 'Unauthorized',
+        description: 'You are not authorized to perform this action. Redirecting to home page...',
+        variant: 'destructive'
+      })
       // Redirect after 3 seconds
     } else {
       toast({
-        title: err.response.data.message || "An error occurred",
-        variant: "destructive",
-      });
+        title: err.response.data.message || 'An error occurred',
+        variant: 'destructive'
+      })
     }
     // Handle other errors
   }
-};
+}
 
 const toggleStatus = (user: { status: boolean }) => {
-  user.status = !user.status;
-};
-const formattedDate = useDateFormat(useNow(), "ddd, D MMM YYYY");
+  user.status = !user.status
+}
+const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
 
 // onMounted(fetchUsersData);
 
 onMounted(async () => {
   // useGeneralStore().setLoading(true);
-  fetchUsersData();
-});
+  fetchUsersData()
+})
 </script>
 
 <template>
@@ -246,10 +231,7 @@ onMounted(async () => {
     <div class="px-10 py-10 ml-auto">
       <Sheet :close="sheetOpen">
         <SheetTrigger as-child>
-          <button
-            @click="sheetOpen = true"
-            class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12"
-          >
+          <button @click="sheetOpen = true" class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
             <div class="text-base text-[#F8F9FF] text-center flex items-center">
               Add New User
               <svg
@@ -415,9 +397,7 @@ onMounted(async () => {
       </Sheet>
     </div>
 
-    <Card
-      class="container px-4 pt-6 pb-10 mx-auto sm:px-6 lg:px-8 bg-[#FFFFFF] rounded-2xl"
-    >
+    <Card class="container px-4 pt-6 pb-10 mx-auto sm:px-6 lg:px-8 bg-[#FFFFFF] rounded-2xl">
       <div class="flex items-center justify-between px-6 py-4">
         <div class="text-2xl font-bold tracking-tight text-[#020721]">
           Back Office Users
@@ -450,7 +430,7 @@ onMounted(async () => {
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
-                  {{ user.status ? "Active" : "Inactive" }}
+                  {{ user.status ? 'Active' : 'Inactive' }}
                 </button>
               </TableCell>
               <TableCell>
