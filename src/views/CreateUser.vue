@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import Search from "@/components/UseSearch.vue";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 import { useDateFormat, useNow } from "@vueuse/core";
 import MainNav from "@/components/MainNav.vue";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import axios from "axios";
 import { Loader2 } from "lucide-vue-next";
 import router from "@/router";
@@ -153,7 +145,7 @@ const fetchUsersData = async () => {
     // Update the users data with the response
 
     users.value = response.data.data.data;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response.status === 401) {
       sessionStorage.removeItem("token");
       // Clear token from superAdminStore
@@ -207,9 +199,9 @@ const saveUserData = async (user: any) => {
     console.log(response.data);
     loading.value = false;
     // Handle success
-  } catch (error) {
+  } catch (err: any) {
     loading.value = false;
-    if (error.response.data.code === 401) {
+    if (err.response.data.code === 401) {
       sessionStorage.removeItem("token");
       // Clear token from superAdminStore
       superAdminStore.setToken("");
@@ -227,7 +219,7 @@ const saveUserData = async (user: any) => {
       // Redirect after 3 seconds
     } else {
       toast({
-        title: error.response.data.message || "An error occurred",
+        title: err.response.data.message || "An error occurred",
         variant: "destructive",
       });
     }
@@ -455,7 +447,6 @@ onMounted(async () => {
               <TableCell>{{ user.dateJoined }}</TableCell>
               <TableCell>
                 <button
-                  @click="toggleStatus(user)"
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
