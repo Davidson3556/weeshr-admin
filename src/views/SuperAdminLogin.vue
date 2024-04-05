@@ -181,13 +181,11 @@ const onSubmit = form.handleSubmit(async () => {
             class="flex items-center -translate-y-[145px] flex-col justify-center space-y-2"
           >
             <h4 class="text-[#F8F9FFB2] tracking-widest">THE</h4>
-            <h4 class="text-[#F8F9FFB2] tracking-widest">THE</h4>
             <img
               class="w-auto h-24"
               src="https://res.cloudinary.com/drykej1am/image/upload/v1697377875/weehser%20pay/Weeshr_Light_lrreyo.svg"
               alt=""
             />
-            <h4 class="text-[#F8F9FFB2] tracking-widest">SUPER ADMIN FACTORY</h4>
             <h4 class="text-[#F8F9FFB2] tracking-widest">SUPER ADMIN FACTORY</h4>
           </div>
 
