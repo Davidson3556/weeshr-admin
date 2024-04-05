@@ -82,7 +82,7 @@ const onSubmit = handleSubmit(async (values) => {
       phoneNumber: values.phone
     },
     dateJoined: formattedDate.value,
-    disabled: values.status || true
+    disabled: values.status || false
   }
 
   await saveUserData(user)
@@ -226,7 +226,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex-col flex bg-[#f0f8ff] min-h-[100vh] px-4 sm:px-10">
+  <div class="flex-col flex bg-[#f0f8ff] min-h-[400px] px-4 sm:px-10 pb-10">
     <MainNav class="mx-6" headingText="User" />
     <div class="px-10 py-10 ml-auto">
       <Sheet :close="sheetOpen">
@@ -406,31 +406,31 @@ onMounted(async () => {
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">
-        <Table>
+        <Table >
           <TableHeader>
             <TableRow
               class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200"
             >
               <TableHead> Users </TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>phone number</TableHead>
               <TableHead>gender</TableHead>
-              <TableHead>Onboarded</TableHead>
               <TableHead>Status</TableHead>
               <TableHead> </TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody >
             <TableRow v-for="user in users" :key="user._id">
-              <TableCell class="font-medium">{{ user.firstName }}</TableCell>
-              <TableCell>{{ user.userEmail }}</TableCell>
+              <TableCell class="font-medium">{{ user.firstName }} {{user.lastName}}</TableCell>
+              <TableCell>{{ user.email }}</TableCell>
+              <TableCell>{{ user.phoneNumber.countryCode }} {{ user.phoneNumber.phoneNumber }}</TableCell>
               <TableCell>{{ user.gender }}</TableCell>
-              <TableCell>{{ user.dateJoined }}</TableCell>
               <TableCell>
                 <button
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
-                  {{ user.status ? 'Active' : 'Inactive' }}
+                  {{ user.disabled ?   'Inactive' : 'Active' }}
                 </button>
               </TableCell>
               <TableCell>
