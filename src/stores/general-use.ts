@@ -12,6 +12,13 @@ export const useGeneralStore = defineStore({
   actions: {
     setLoading(loading: boolean) {
       this.loading = loading
+    },
+    setLoadingToFalse() {
+      this.loading = false
+    },
+    setLoadingToTrue() {
+      console.log('hhj')
+      this.loading = true
     }
   }
 })

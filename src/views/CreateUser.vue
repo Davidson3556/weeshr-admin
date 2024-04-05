@@ -1,38 +1,15 @@
 <script setup lang="ts">
 import Search from '@/components/UseSearch.vue'
-import { ref, watchEffect } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useDateFormat, useNow } from '@vueuse/core'
 import MainNav from '@/components/MainNav.vue'
-import { format } from 'date-fns'
-import { Calendar as CalendarIcon } from 'lucide-vue-next'
-import { h } from 'vue'
-import { useCreateUserStore } from '@/stores/create-user/create-user'
-import axios, { AxiosError } from 'axios'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { toast } from '@/components/ui/toast'
-import { Calendar } from '@/components/ui/calendar'
-import { cn } from '@/lib/utils'
+
+import axios from 'axios'
 import { Loader2 } from 'lucide-vue-next'
-
-// Fetch user data from the API
-async function fetchUsers() {
-  try {
-    const response = await axios.get('/api/users')
-    users.value = response.data
-  } catch (error) {
-    console.error('Error fetching users:', error)
-  }
-}
-
-// Call fetchUsers when the component is mounted
-fetchUsers()
-
-const createUserStore = useCreateUserStore()
-const users = ref([])
+import router from '@/router'
 import {
   Sheet,
   SheetContent,
@@ -50,154 +27,217 @@ import {
   TableHead
 } from '@/components/ui/table'
 
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/toast'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
+import { useGeneralStore } from '@/stores/general-use'
 
 const formSchema = toTypedSchema(
   z.object({
     firstName: z
-      .string({
-        required_error: 'Please enter user first name'
-      })
-      .min(2)
-      .max(50),
+      .string()
+      .min(2, { message: 'First name must be at least 2 characters long' })
+      .max(50, { message: 'First name cannot be longer than 50 characters' })
+      .nonempty('Please enter your first name'),
     lastName: z
-      .string({
-        required_error: 'Please enter user last name'
-      })
-      .min(2)
-      .max(50),
-    userEmail: z.string().email(),
-    dob: z.date({
-      required_error: 'A date of birth is required.'
-    }),
-    category: z.string(),
-
-    gender: z.string(),
-    phoneNumber: z.string().regex(/^\d+$/)
+      .string()
+      .min(2, { message: 'Last name must be at least 2 characters long' })
+      .max(50, { message: 'Last name cannot be longer than 50 characters' })
+      .nonempty('Please enter your last name'),
+    userEmail: z.string().email('Please enter a valid email address'),
+    dob: z.string().nonempty('Please enter your date of birth'),
+    gender: z.string().nonempty('Please select your gender'),
+    status: z.boolean().optional(),
+    phone: z.string().nonempty('Please enter your phone number')
   })
 )
 const { handleSubmit } = useForm({
   validationSchema: formSchema
 })
 
-const loading = ref(false) // Initialize loading state
-
-const fullName = (user: { firstName: string; lastName: string }) => {
-  return `${user.firstName} ${user.lastName}`
-}
-const userToAdd = {
-  firstName: 'disabled',
-  lastName: 'test_admin_d',
-  userEmail: 'test_admin_d@gmail.com',
-  gender: 'Male',
-  dob: '1990-03-22',
-  phoneNumber: '123-456-7890',
-  dateJoined: '2024-03-21',
-  status: true,
-  phone: { countryCode: '234', phoneNumber: '3429930834594' },
-  category: 'Admin'
-}
-
-createUserStore.addUser(userToAdd)
+const newUser = ref({
+  firstName: '',
+  userEmail: '',
+  lastName: '',
+  gender: '',
+  dob: ''
+})
+const sheetOpen = ref(false)
+const loading = ref(false)
+const superAdminStore = useSuperAdminStore()
+const token = sessionStorage.getItem('token') || ''
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true
 
   const user = {
-    firstName: createUserStore.firstName,
-    lastName: createUserStore.lastName,
-    userEmail: createUserStore.userEmail,
-    gender: createUserStore.gender,
-    dob: createUserStore.dob,
-    phoneNumber: createUserStore.phoneNumber,
+    firstName: values.firstName,
+    lastName: values.lastName,
+    email: values.userEmail,
+    gender: values.gender,
+    dob: values.dob,
+    phone: {
+      countryCode: '+234',
+      phoneNumber: values.phone
+    },
     dateJoined: formattedDate.value,
-    status: true
+    disabled: values.status || false
   }
 
+  await saveUserData(user)
+
+  sheetOpen.value = false
+
+  // Show success toast
+
+  // Reset form fields
+  newUser.value = {
+    firstName: '',
+    lastName: '',
+    userEmail: '',
+    gender: '',
+    dob: ''
+  }
+})
+
+// Define a ref to hold the users data
+// const users = ref([]);
+const users = ref<any[]>([]) // Specify the type as any[] or the correct type of your user objects
+
+// Define a function to fetch users data
+const fetchUsersData = async () => {
+  toast({
+    title: 'Loading Data',
+    description: 'Fetching data...',
+    duration: 0, // Set duration to 0 to make it indefinite until manually closed
+  });
+
+  // useGeneralStore().setLoading(true)
   try {
-    // Send form data to the backend
-    await axios.post('/api/addUser', values)
+    // Set loading to true
 
-    // Clear form fields
-    // resetForm(); // You need to define this function in your useForm hook
-    // Optionally, you can fetch the updated list of users
-    fetchUsers()
-
-    // Show success message
-    toast({
-      title: 'Success',
-      description: 'User added successfully',
-      variant: 'success'
-    })
-  } catch (error: any) {
-    loading.value = false
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError
-      if (axiosError.response) {
-        if (axiosError.response.data && typeof axiosError.response.data === 'object') {
-          const responseData = axiosError.response.data as { message?: string }
-          toast({
-            title: responseData.message || 'An error occurred',
-            variant: 'destructive'
-          })
-        } else {
-          toast({
-            title: 'An error occurred',
-            variant: 'destructive'
-          })
-        }
-      } else {
-        toast({
-          title: 'An error occurred',
-          variant: 'destructive'
-        })
+    const response = await axios.get('https://api.staging.weeshr.com/api/v1/administrators', {
+      // params: {
+      //   search: 'test_admin',
+      //   disabled_status: 'disabled'
+      // },
+      headers: {
+        Authorization: `Bearer ${token}`
       }
+    })
+
+    if (response.status === 200 || response.status === 201) {
+      useGeneralStore().setLoadingToFalse()
+      // Show success toast
+      toast({
+        title: 'Success',
+        description: `data fetched`,
+        variant: 'success'
+      })
+
+      console.log('jiji' + JSON.stringify(response.data))
+    }
+
+    // Update the users data with the response
+
+    users.value = response.data.data.data
+  } catch (error: any) {
+    if (error.response.status === 401) {
+      sessionStorage.removeItem('token')
+      // Clear token from superAdminStore
+      superAdminStore.setToken('')
+
+      setTimeout(() => {
+        router.push({ name: 'super-admin-login' })
+      }, 3000)
+
+      toast({
+        title: 'Unauthorized',
+        description: 'You are not authorized to perform this action. Redirecting to home page...',
+        variant: 'destructive'
+      })
+      // Redirect after 3 seconds
+    } else {
+      toast({
+        title: error.response.data.message || 'An error occurred',
+        variant: 'destructive'
+      })
     }
   }
+} // Call the fetchUsersData function when the component is mounted
 
-  toast({
-    title: 'You submitted the following values:',
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))
-    )
-  })
+// Save user data to the /administrator endpoint
+const saveUserData = async (user: any) => {
+  loading.value = true
+  try {
+    const response = await axios.post('https://api.staging.weeshr.com/api/v1/administrator', user, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
 
-  createUserStore.addUser(user)
-  createUserStore.resetForm()
-})
+    // Check if response status is 200 or 201
+    if (response.status === 200 || response.status === 201) {
+      // Show success toast
+      toast({
+        title: 'Success',
+        description: `${user.firstName} User profile created successfully.`,
+        variant: 'success'
+      })
+    }
 
-watchEffect(() => {
-  const user = {
-    firstName: createUserStore.firstName,
-    lastName: createUserStore.lastName
+    console.log(response.data)
+    loading.value = false
+    // Handle success
+  } catch (err: any) {
+    loading.value = false
+    if (err.response.data.code === 401) {
+      sessionStorage.removeItem('token')
+      // Clear token from superAdminStore
+      superAdminStore.setToken('')
+
+      setTimeout(() => {
+        router.push({ name: 'super-admin-login' })
+      }, 3000)
+
+      toast({
+        title: 'Unauthorized',
+        description: 'You are not authorized to perform this action. Redirecting to home page...',
+        variant: 'destructive'
+      })
+      // Redirect after 3 seconds
+    } else {
+      toast({
+        title: err.response.data.message || 'An error occurred',
+        variant: 'destructive'
+      })
+    }
+    // Handle other errors
   }
-  fullName(user) // Call fullName function with the user object
-})
+}
 
 const toggleStatus = (user: { status: boolean }) => {
   user.status = !user.status
 }
 const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
+
+// onMounted(fetchUsersData);
+
+onMounted(async () => {
+  // useGeneralStore().setLoading(true);
+  fetchUsersData()
+})
 </script>
 
 <template>
-  <div class="flex-col flex bg-[#f0f8ff] min-h-[100vh] px-4 sm:px-10">
+  <div class="flex-col flex bg-[#f0f8ff] min-h-[400px] px-4 sm:px-10 pb-10">
     <MainNav class="mx-6" headingText="User" />
-    <div class="px-10 py-10 ml-auto" style="max-height: 80vh">
-      <Sheet>
+    <div class="px-10 py-10 ml-auto">
+      <Sheet :close="sheetOpen">
         <SheetTrigger as-child>
-          <button class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
+          <button @click="sheetOpen = true" class="bg-[#020721] px-4 py-2 rounded-xl w-50 h-12">
             <div class="text-base text-[#F8F9FF] text-center flex items-center">
               Add New User
               <svg
@@ -275,103 +315,87 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                   <FormMessage />
                 </FormItem>
               </FormField>
-              <FormField v-slot="{ componentField, value }" name="dob">
-                <FormItem class="flex flex-col">
-                  <FormLabel>Date of birth</FormLabel>
-                  <Popover>
-                    <PopoverTrigger as-child>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          :class="
-                            cn(
-                              'w-[240px] ps-3 text-start font-normal',
-                              !value && 'text-muted-foreground'
-                            )
-                          "
-                        >
-                          <span>{{ value ? format(value, 'PPP') : 'Pick a date' }}</span>
-                          <CalendarIcon class="ms-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent class="p-0">
-                      <Calendar v-bind="componentField" />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                  <!-- Ensure FormMessage has appropriate content -->
-                </FormItem>
-              </FormField>
-              <FormField v-slot="{ componentField }" name="phonenumber">
-                <FormItem v-auto-animate>
-                  <FormLabel class="text-blue-900">Phone Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="number"
-                      type="tel"
-                      placeholder="Phone Number"
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                      title="Phone number must be in the format XXX-XXX-XXXX"
-                      v-bind="componentField"
-                      class="appearance-none border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus-visible:ring-blue-600"
-                    />
-                  </FormControl>
-
-                  <FormMessage for="phonenumber" />
-                </FormItem>
-              </FormField>
-
-              <!-- <FormField v-slot="{ componentField }" name="dob">
-                <FormItem v-auto-animate>
-                  <FormLabel class="text-blue-900">Email</FormLabel>
-                  <FormControl>
-                    <useSuperAdminStore></useSuperAdminStore>
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              </FormField> -->
-
-              <FormField v-slot="{ componentField }" name="category">
-                <FormItem v-auto-animate>
-                  <FormLabel class="text-blue-900">Category</FormLabel>
-                  <FormControl>
-                    <select
-                      v-bind="componentField"
-                      id="category"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Select a category"
-                    >
-                      <option value="" disabled selected hidden>Select a category</option>
-                      <option value="Vendor">Vendor</option>
-                      <option value="Admin">Admin</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField v-slot="{ componentField }" name="gender">
-                <FormItem v-auto-animate>
-                  <FormLabel class="text-blue-900">User gender</FormLabel>
-                  <FormControl>
+              <div class="flex flex-row justify-between gap-2">
+                <FormField v-slot="{ componentField }" name="gender" class="w-[40%]">
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
                     <select
                       v-bind="componentField"
                       id="gender"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Select a category"
                     >
-                      <option value="" disabled selected hidden>Select a category</option>
+                      <option value="" disabled selected hidden>Gender</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                     </select>
+                    <FormMessage for="gender" />
+                  </FormItem>
+                </FormField>
+
+                <div class="w-[70%]">
+                  <FormField v-slot="{ componentField }" name="dob">
+                    <FormItem v-auto-animate>
+                      <FormLabel class="text-blue-900">Date of Birth</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="dob"
+                          type="date"
+                          placeholder="Date of Birth"
+                          class="focus-visible:ring-blue-600"
+                          v-bind="componentField"
+                        />
+                      </FormControl>
+
+                      <FormMessage for="dob" />
+                    </FormItem>
+                  </FormField>
+                </div>
+              </div>
+
+              <FormField v-slot="{ componentField }" name="phone">
+                <FormItem v-auto-animate>
+                  <FormLabel class="text-blue-900">Phone Number</FormLabel>
+                  <FormControl>
+                    <div>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="Phone Number"
+                        class="focus-visible:ring-blue-600"
+                        v-bind="componentField"
+                      />
+                    </div>
                   </FormControl>
-                  <FormMessage />
+
+                  <FormMessage for="phone" />
                 </FormItem>
               </FormField>
 
-              <Button type="submit">
+              <FormField v-slot="{ componentField }" name="status">
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <select
+                    v-bind="componentField"
+                    id="status"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Status"
+                  >
+                    <option value="" disabled selected hidden>Select user Status</option>
+                    <option :value="true">True</option>
+                    <option :value="false">False</option>
+                  </select>
+                  <FormMessage for="status" />
+                </FormItem>
+              </FormField>
+            
+
+              <Button :disabled="loading" type="submit">
+                <Loader2
+                  color="#ffffff"
+                  v-if="loading"
+                  class="w-4 h-4 mr-2 text-black animate-spin"
+                />
                 Submit
 
                 <Loader2 v-if="loading" class="w-4 h-4 mr-2 text-black animate-spin" />
@@ -388,39 +412,33 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
           Back Office Users
           <p class="text-xs text-[#02072199] py-2">List of Admin Users</p>
         </div>
-
-        <Search />
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">
-        <Table>
+        <Table >
           <TableHeader>
             <TableRow
               class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200"
             >
               <TableHead> Full Name </TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Phonenumber</TableHead>
-              <TableHead> Onboardrd</TableHead>
-              <TableHead> Category</TableHead>
+              <TableHead>phone number</TableHead>
+              <TableHead>gender</TableHead>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            <TableRow v-for="user in createUserStore.users" :key="user.firstName">
-              <TableCell class="font-medium">{{ fullName(user) }}</TableCell>
-              <TableCell>{{ user.userEmail }}</TableCell>
-              <TableCell>{{ user.phoneNumber }}</TableCell>
-              <TableCell>{{ user.dateJoined }}</TableCell>
-              <TableCell>{{ user.category }}</TableCell>
-
+          <TableBody >
+            <TableRow v-for="user in users" :key="user._id">
+              <TableCell class="font-medium">{{ user.firstName }} {{user.lastName}}</TableCell>
+              <TableCell>{{ user.email }}</TableCell>
+              <TableCell>{{ user.phoneNumber.countryCode }} {{ user.phoneNumber.phoneNumber }}</TableCell>
+              <TableCell>{{ user.gender }}</TableCell>
               <TableCell>
                 <button
-                  @click="toggleStatus(user)"
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
-                  {{ user.status ? 'Active' : 'Inactive' }}
+                  {{ user.disabled ?   'Inactive' : 'Active' }}
                 </button>
               </TableCell>
               <TableCell>
@@ -438,4 +456,4 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
     </Card>
   </div>
 </template>
-@/stores/super-admin/super-admin@/stores/super-admin/super-admin@/stores/Create-User/create-user@/stores/create-user/Create-User
+@/stores/super-admin/super-admin@/stores/super-admin/super-admin
