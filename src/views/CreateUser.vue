@@ -53,7 +53,6 @@ const formSchema = toTypedSchema(
     phone: z.string().nonempty('Please enter your phone number')
   })
 )
-
 const { handleSubmit } = useForm({
   validationSchema: formSchema
 })
@@ -71,6 +70,8 @@ const superAdminStore = useSuperAdminStore()
 const token = sessionStorage.getItem('token') || ''
 
 const onSubmit = handleSubmit(async (values) => {
+  loading.value = true
+
   const user = {
     firstName: values.firstName,
     lastName: values.lastName,
@@ -107,6 +108,12 @@ const users = ref<any[]>([]) // Specify the type as any[] or the correct type of
 
 // Define a function to fetch users data
 const fetchUsersData = async () => {
+  toast({
+    title: 'Loading Data',
+    description: 'Fetching data...',
+    duration: 0, // Set duration to 0 to make it indefinite until manually closed
+  });
+
   // useGeneralStore().setLoading(true)
   try {
     // Set loading to true
@@ -158,7 +165,6 @@ const fetchUsersData = async () => {
         variant: 'destructive'
       })
     }
-  } finally {
   }
 } // Call the fetchUsersData function when the component is mounted
 
@@ -250,7 +256,7 @@ onMounted(async () => {
             </div>
           </button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent class="overflow-y-auto">
           <SheetHeader>
             <h3 class="text-2xl font-medium">Create User profile</h3>
             <SheetDescription>
@@ -382,6 +388,7 @@ onMounted(async () => {
                   <FormMessage for="status" />
                 </FormItem>
               </FormField>
+            
 
               <Button :disabled="loading" type="submit">
                 <Loader2
@@ -390,6 +397,8 @@ onMounted(async () => {
                   class="w-4 h-4 mr-2 text-black animate-spin"
                 />
                 Submit
+
+                <Loader2 v-if="loading" class="w-4 h-4 mr-2 text-black animate-spin" />
               </Button>
             </form>
           </CardContent>
@@ -411,12 +420,11 @@ onMounted(async () => {
             <TableRow
               class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200"
             >
-              <TableHead> Users </TableHead>
+              <TableHead> Full Name </TableHead>
               <TableHead>Email</TableHead>
               <TableHead>phone number</TableHead>
               <TableHead>gender</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead> </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody >
@@ -436,7 +444,7 @@ onMounted(async () => {
               <TableCell>
                 <!-- <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
-                    stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
+                     stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
                     stroke-linejoin="round" />
                 </svg> -->
                 <!-- Add any action button or link here -->
