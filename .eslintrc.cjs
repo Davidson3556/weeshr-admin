@@ -17,7 +17,7 @@ module.exports = {
     {
       files: ['./src/components/ui'],  // Change this to default.vue path
       rules: {
-        'vue/multi-word-component-names': 'off',
+        // 'vue/multi-word-component-names': 'off',
       }
     }
   ]
