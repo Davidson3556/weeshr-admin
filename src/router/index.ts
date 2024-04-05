@@ -18,14 +18,14 @@ const routes = [
     path: '/super-admin-login',
     name: 'super-admin-login',
     component: SuperAdminLogin,
-    meta: { hideSidebar: true }
+    meta: { hideSidebar: false }
   },
 
   {
     path: '/errorpage',
     name: 'error',
     component: ErrorPage,
-    meta: { hideSidebar: true }
+    meta: { hideSidebar: false }
   },
 
   {
