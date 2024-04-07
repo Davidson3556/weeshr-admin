@@ -22,7 +22,7 @@ const routes = [
   },
 
   {
-    path: '/errorpage',
+    path: '/error',
     name: 'error',
     component: ErrorPage,
     meta: { hideSidebar: true }
