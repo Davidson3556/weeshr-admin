@@ -15,8 +15,8 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/super-admin-login',
-    name: 'super-admin-login',
+    path: '/login',
+    name: 'superAdmin-login',
     component: SuperAdminLogin,
     meta: { hideSidebar: true }
   },
@@ -47,15 +47,15 @@ const routes = [
     name: 'create-user',
     component: appuser,
     meta: { requiresAuth: true }
-  },
-
-  // Added the wildcard route for handling 404 errors here
-  {
-    path: '/:catchAll(.*)',
-    name: 'not-found',
-    component: ErrorPage,
-    meta: { hideSidebar: true }
   }
+
+  // // Added the wildcard route for handling 404 errors here
+  // {
+  //   path: '/:catchAll(.*)',
+  //   name: 'not-found',
+  //   component: ErrorPage,
+  //   meta: { hideSidebar: true }
+  // }
 ]
 
 const router = createRouter({
