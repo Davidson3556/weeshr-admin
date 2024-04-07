@@ -1,8 +1,4 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
-import router from '@/router'
-import { toast } from '@/components/ui/toast'
-import { useGeneralStore } from '@/stores/general-use'
 
 export const useCreateUserStore = defineStore({
   id: 'user',
