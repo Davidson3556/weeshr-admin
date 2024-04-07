@@ -101,7 +101,7 @@ const onSubmit = form.handleSubmit(async () => {
 
         router.push({ name: 'home' })
       } else {
-        router.push({ name: 'super-admin-login' })
+        router.push({ name: 'superAdmin-login' })
       }
 
       // Redirect to home page after successful login
