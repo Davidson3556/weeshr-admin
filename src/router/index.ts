@@ -68,7 +68,7 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
   if (requiresAuth && !isAuthenticated) {
-    next({ name: 'super-admin-login' }) // Redirect to login if not authenticated
+    next({ name: 'superAdmin-login' }) // Redirect to login if not authenticated
   } else {
     next() // Continue navigation
   }
