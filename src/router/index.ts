@@ -5,7 +5,7 @@ import configuration from '../views/UserConfiguration.vue'
 import user from '../views/UserHub.vue'
 import appuser from '../views/CreateUser.vue'
 import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
-import ErrorPage from '../views/Errorpage.vue'
+import ErrorPage from '../views/ErrorPage.vue'
 
 const routes = [
   {

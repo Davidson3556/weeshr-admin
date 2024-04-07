@@ -26,6 +26,13 @@ const superAdminStore = useSuperAdminStore()
 onMounted(() => {
   updateYear()
   setInterval(updateYear, 1000 * 60 * 60 * 24 * 30) // Update the year once a month
+
+  // Choose a random index for variety
+  const randomIndex = Math.floor(Math.random() * quotes.length)
+
+  // Set the data properties
+  quote.value = quotes[randomIndex]
+  author.value = authors[randomIndex]
 })
 
 const loading = ref(false)
@@ -42,15 +49,6 @@ const authors = ['Chloe Thompson', 'Mason Carter', 'Isabella Scott', 'Noah Adams
 
 const quote = ref<string>('')
 const author = ref<string>('')
-
-onMounted(() => {
-  // Choose a random index for variety
-  const randomIndex = Math.floor(Math.random() * quotes.length)
-
-  // Set the data properties
-  quote.value = quotes[randomIndex]
-  author.value = authors[randomIndex]
-})
 
 const formSchema = toTypedSchema(
   z.object({

@@ -218,9 +218,7 @@ const saveUserData = async (user: any) => {
   }
 }
 
-const toggleStatus = (user: { status: boolean }) => {
-  user.status = !user.status
-}
+
 const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
 
 // onMounted(fetchUsersData);
