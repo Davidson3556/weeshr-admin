@@ -47,15 +47,11 @@ const routes = [
     name: 'create-user',
     component: appuser,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/:catchAll(.*)', // Wildcard route to catch all unmatched paths
+    redirect: { name: 'error' } // Redirect to error page
   }
-
-  // // Added the wildcard route for handling 404 errors here
-  // {
-  //   path: '/:catchAll(.*)',
-  //   name: 'not-found',
-  //   component: ErrorPage,
-  //   meta: { hideSidebar: true }
-  // }
 ]
 
 const router = createRouter({
