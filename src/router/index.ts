@@ -6,6 +6,7 @@ import user from '../views/UserHub.vue'
 import appuser from '../views/CreateUser.vue'
 import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
 import ErrorPage from '../views/Errorpage.vue'
+import UserHub from '../views/UserHub.vue'
 
 const routes = [
   {
@@ -38,10 +39,27 @@ const routes = [
   {
     path: '/user',
     name: 'user',
-    component: user,
+    component: ()=> import('../views/UserHub.vue'),
     meta: { requiresAuth: true }
   },
-
+  {
+    path: '/user/appuser',
+    name: 'appuser',
+    component: ()=> import('../views/AppUsers.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/user/vendors',
+    name: 'vendors',
+    component: ()=> import('../views/Vendors.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/user/admin',
+    name: 'admin',
+    component: ()=> import('../views/Admin.vue'),
+    meta: { requiresAuth: true }
+  },
   {
     path: '/create-user',
     name: 'create-user',
