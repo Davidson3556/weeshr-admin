@@ -111,8 +111,8 @@ const fetchUsersData = async () => {
   toast({
     title: 'Loading Data',
     description: 'Fetching data...',
-    duration: 0, // Set duration to 0 to make it indefinite until manually closed
-  });
+    duration: 0 // Set duration to 0 to make it indefinite until manually closed
+  })
 
   // useGeneralStore().setLoading(true)
   try {
@@ -150,7 +150,7 @@ const fetchUsersData = async () => {
       superAdminStore.setToken('')
 
       setTimeout(() => {
-        router.push({ name: 'super-admin-login' })
+        router.push({ name: 'superAdmin-login' })
       }, 3000)
 
       toast({
@@ -199,7 +199,7 @@ const saveUserData = async (user: any) => {
       superAdminStore.setToken('')
 
       setTimeout(() => {
-        router.push({ name: 'super-admin-login' })
+        router.push({ name: 'superAdmin-login' })
       }, 3000)
 
       toast({
@@ -218,9 +218,6 @@ const saveUserData = async (user: any) => {
   }
 }
 
-const toggleStatus = (user: { status: boolean }) => {
-  user.status = !user.status
-}
 const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
 
 // onMounted(fetchUsersData);
@@ -388,7 +385,6 @@ onMounted(async () => {
                   <FormMessage for="status" />
                 </FormItem>
               </FormField>
-            
 
               <Button :disabled="loading" type="submit">
                 <Loader2
@@ -415,7 +411,7 @@ onMounted(async () => {
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">
-        <Table >
+        <Table>
           <TableHeader>
             <TableRow
               class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200"
@@ -427,18 +423,20 @@ onMounted(async () => {
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody >
+          <TableBody>
             <TableRow v-for="user in users" :key="user._id">
-              <TableCell class="font-medium">{{ user.firstName }} {{user.lastName}}</TableCell>
+              <TableCell class="font-medium">{{ user.firstName }} {{ user.lastName }}</TableCell>
               <TableCell>{{ user.email }}</TableCell>
-              <TableCell>{{ user.phoneNumber.countryCode }} {{ user.phoneNumber.phoneNumber }}</TableCell>
+              <TableCell
+                >{{ user.phoneNumber.countryCode }} {{ user.phoneNumber.phoneNumber }}</TableCell
+              >
               <TableCell>{{ user.gender }}</TableCell>
               <TableCell>
                 <button
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
-                  {{ user.disabled ?   'Inactive' : 'Active' }}
+                  {{ user.disabled ? 'Inactive' : 'Active' }}
                 </button>
               </TableCell>
               <TableCell>

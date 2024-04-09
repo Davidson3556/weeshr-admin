@@ -49,3 +49,5 @@ node_modules/
 # Build files
 /build/
 *.tsbuildinfo
+.vercel
+.gitignore

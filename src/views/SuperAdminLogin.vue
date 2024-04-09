@@ -1,154 +1,127 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue'
 
-import { Button } from "@/components/ui/button";
-import { useForm } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/zod";
-import * as z from "zod";
-import { Loader2 } from "lucide-vue-next";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Button } from '@/components/ui/button'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+import { Loader2 } from 'lucide-vue-next'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/toast";
-import router from "@/router";
-import { useSuperAdminStore } from "@/stores/super-admin/super-admin";
-import axios from "axios";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { toast } from '@/components/ui/toast'
+import router from '@/router'
+import { useSuperAdminStore } from '@/stores/super-admin/super-admin'
+import axios from 'axios'
 
-const currentYear = ref(new Date().getFullYear());
+const currentYear = ref(new Date().getFullYear())
 
 const updateYear = () => {
-  currentYear.value = new Date().getFullYear();
-};
+  currentYear.value = new Date().getFullYear()
+}
 
-const superAdminStore = useSuperAdminStore();
-
-onMounted(() => {
-  updateYear();
-  setInterval(updateYear, 1000 * 60 * 60 * 24 * 30); // Update the year once a month
-});
-
-const loading = ref(false);
-
-const quotes = [
-  "Weehr App turns my ordinary moments into extraordinary 🌟 memories...",
-  "Experiencing pure joy is just a 🎉 tap away with Weehr App...",
-  "Weehr App has redefined the art of wish fulfillment, making 🎂 dreams come true effortlessly...",
-  "Navigating life's wishes is a 🎁 breeze, thanks to the intuitive Weehr App...",
-  "Every 🌈 wish feels like pure magic, courtesy of Weehr App's innovation and simplicity...",
-];
-
-const authors = [
-  "Chloe Thompson",
-  "Mason Carter",
-  "Isabella Scott",
-  "Noah Adams",
-  "Ava Miller",
-];
-
-const quote = ref<string>("");
-const author = ref<string>("");
+const superAdminStore = useSuperAdminStore()
 
 onMounted(() => {
+  updateYear()
+  setInterval(updateYear, 1000 * 60 * 60 * 24 * 30) // Update the year once a month
+
   // Choose a random index for variety
-  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const randomIndex = Math.floor(Math.random() * quotes.length)
 
   // Set the data properties
-  quote.value = quotes[randomIndex];
-  author.value = authors[randomIndex];
-});
+  quote.value = quotes[randomIndex]
+  author.value = authors[randomIndex]
+})
+
+const loading = ref(false)
+
+const quotes = [
+  'Weehr App turns my ordinary moments into extraordinary 🌟 memories...',
+  'Experiencing pure joy is just a 🎉 tap away with Weehr App...',
+  'Weehr App has redefined the art of wish fulfillment, making 🎂 dreams come true effortlessly...',
+  "Navigating life's wishes is a 🎁 breeze, thanks to the intuitive Weehr App...",
+  "Every 🌈 wish feels like pure magic, courtesy of Weehr App's innovation and simplicity..."
+]
+
+const authors = ['Chloe Thompson', 'Mason Carter', 'Isabella Scott', 'Noah Adams', 'Ava Miller']
+
+const quote = ref<string>('')
+const author = ref<string>('')
 
 const formSchema = toTypedSchema(
   z.object({
     userEmail: z
       .string({
-        required_error: "Please enter a valid email",
+        required_error: 'Please enter a valid email'
       })
       .email(),
 
     password: z
       .string({
-        required_error: "Please enter your password ",
+        required_error: 'Please enter your password '
       })
-      .min(9),
+      .min(9)
   })
-);
+)
 
 const form = useForm({
-  validationSchema: formSchema,
-});
+  validationSchema: formSchema
+})
 
 const onSubmit = form.handleSubmit(async () => {
-  loading.value = true;
+  loading.value = true
 
   // Ensure userEmail and password have values
   if (form.values.userEmail && form.values.password) {
-    const { userEmail, password } = form.values;
+    const { userEmail, password } = form.values
 
-    console.log(userEmail, password);
+    console.log(userEmail, password)
 
     // Set the username and password in the store
-    superAdminStore.setuserEmail(userEmail);
-    superAdminStore.setPassword(password);
+    superAdminStore.setuserEmail(userEmail)
+    superAdminStore.setPassword(password)
 
     try {
-      const response = await axios.post(
-        "https://api.staging.weeshr.com/api/v1/admin/login",
-        {
-          email: userEmail,
-          password: password,
-        }
-      );
+      const response = await axios.post('https://api.staging.weeshr.com/api/v1/admin/login', {
+        email: userEmail,
+        password: password
+      })
 
       // Check if the token property exists in the response
-      if (
-        response.data.data &&
-        response.data.data.user &&
-        response.data.data.user.token
-      ) {
+      if (response.data.data && response.data.data.user && response.data.data.user.token) {
         // Access the token from the response data
-        const token = response.data.data.user.token;
+        const token = response.data.data.user.token
 
         // Save the token in Pinia store
-        superAdminStore.setToken(token);
+        superAdminStore.setToken(token)
 
         // Save the token in sessionStorage
 
-        router.push({ name: "home" });
+        router.push({ name: 'home' })
       } else {
-        router.push({ name: "super-admin-login" });
+        router.push({ name: 'superAdmin-login' })
       }
 
       // Redirect to home page after successful login
     } catch (error: any) {
-      loading.value = false;
+      loading.value = false
       // Handle login errors, such as displaying error messages to the user
       toast({
-        title: error.response.data.message || "An error occurred",
-        variant: "destructive",
-      });
+        title: error.response.data.message || 'An error occurred',
+        variant: 'destructive'
+      })
     }
   } else {
     // Handle the case when form fields are empty
     toast({
-      title: "Please enter your username/email and password.",
-      variant: "destructive",
-    });
-    loading.value = false;
+      title: 'Please enter your username/email and password.',
+      variant: 'destructive'
+    })
+    loading.value = false
   }
-});
+})
 </script>
 
 <template>
@@ -173,9 +146,7 @@ const onSubmit = form.handleSubmit(async () => {
           alt="gradient"
         />
 
-        <div
-          class="inset-0 flex items-center justify-center w-full h-full text-center -left-[20%]"
-        >
+        <div class="inset-0 flex items-center justify-center w-full h-full text-center -left-[20%]">
           <div
             aria-current="page"
             class="flex items-center -translate-y-[145px] flex-col justify-center space-y-2"
@@ -210,13 +181,12 @@ const onSubmit = form.handleSubmit(async () => {
                 class="flex lg:hidden justify-center -translate-y-[60px] flex-col space-y-2"
               >
                 <h4 class="text-[#F8F9FFB2] tracking-widest">THE</h4>
-                <h4 class="text-[#F8F9FFB2] tracking-widest">THE</h4>
+
                 <img
                   class="w-auto h-20"
                   src="https://res.cloudinary.com/drykej1am/image/upload/v1697377875/weehser%20pay/Weeshr_Light_lrreyo.svg"
                   alt=""
                 />
-                <h4 class="text-[#F8F9FFB2] tracking-widest">SUPER ADMIN FACTORY</h4>
                 <h4 class="text-[#F8F9FFB2] tracking-widest">SUPER ADMIN FACTORY</h4>
               </div>
             </div>
