@@ -452,7 +452,11 @@ onMounted(async () => {
           Admin
           <p class="text-xs text-[#02072199] py-2">List of Weehr Admin</p>
         </div>
-        <Search/>
+         <div class="flex flex-col">
+          
+        </div>
+<Search/>
+       
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">

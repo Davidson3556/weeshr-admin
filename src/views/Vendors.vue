@@ -7,7 +7,6 @@ import * as z from 'zod'
 import { useDateFormat, useNow } from '@vueuse/core'
 import MainNav from '@/components/MainNav.vue'
 import VueTelInput from 'vue-tel-input'
-
 import 'vue-tel-input/vue-tel-input.css'
 
 import axios from 'axios'
@@ -305,7 +304,8 @@ onMounted(async () => {
                       class="focus-visible:ring-blue-600"
                       v-bind="componentField"
                     >
-                    </vue-tel-input></div>
+                    </vue-tel-input>
+                  </div>
                   </FormControl>
 
                   <FormMessage for="phone" />
