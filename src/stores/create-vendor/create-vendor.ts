@@ -14,7 +14,7 @@ interface VendorUserState {
 interface NewUser {
   username: string
   userEmail: string
-  category: 'Cash' | 'Giftcard'  | 'All'
+  category: 'Cash' | 'Giftcard' | 'All'
 }
 
 export const useVendorUserStore = defineStore({

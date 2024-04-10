@@ -6,7 +6,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useDateFormat, useNow } from '@vueuse/core'
 import MainNav from '@/components/MainNav.vue'
-import VueTelInput from 'vue-tel-input';
+import VueTelInput from 'vue-tel-input'
 import 'vue-tel-input/vue-tel-input.css'
 import axios from 'axios'
 import { Loader2 } from 'lucide-vue-next'
@@ -52,43 +52,43 @@ const formSchema = toTypedSchema(
     gender: z.string().nonempty('Please select your gender'),
     phone: z.string().nonempty('Please enter your phone number'),
     admin_type: z.string().nonempty('Please select your admin_type'),
-    items: z.array(z.string()).refine(value => value.some(item => item), {
-    message: 'You have to select at least one item.',  })
+    items: z.array(z.string()).refine((value) => value.some((item) => item), {
+      message: 'You have to select at least one item.'
+    })
   })
-    )
+)
 const items = [
   {
     id: 'recents',
-    label: 'Recents',
+    label: 'Recents'
   },
   {
     id: 'home',
-    label: 'Home',
+    label: 'Home'
   },
   {
     id: 'applications',
-    label: 'Applications',
+    label: 'Applications'
   },
   {
     id: 'desktop',
-    label: 'Desktop',
+    label: 'Desktop'
   },
   {
     id: 'downloads',
-    label: 'Downloads',
+    label: 'Downloads'
   },
   {
     id: 'documents',
-    label: 'Documents',
-  },
-] 
-
+    label: 'Documents'
+  }
+]
 
 const { handleSubmit } = useForm({
   validationSchema: formSchema,
   initialValues: {
-    items: ['recents', 'home'],
-  },
+    items: ['recents', 'home']
+  }
 })
 
 const newUser = ref({
@@ -133,9 +133,8 @@ const onSubmit = handleSubmit(async (values) => {
     lastName: '',
     userEmail: '',
     gender: '',
-    dob: '',
-    
-  }        
+    dob: ''
+  }
 })
 
 // Define a ref to hold the users data
@@ -147,22 +146,25 @@ const fetchUsersData = async () => {
   toast({
     title: 'Loading Data',
     description: 'Fetching data...',
-    duration: 0, // Set duration to 0 to make it indefinite until manually closed
-  });
+    duration: 0 // Set duration to 0 to make it indefinite until manually closed
+  })
 
   // useGeneralStore().setLoading(true)
   try {
     // Set loading to true
 
-    const response = await axios.get('https:{{host}}/administrators?search=test_admin&disabled_status=disabled', {
-      // params: {
-      //   search: 'test_admin',
-      //   disabled_status: 'disabled'
-      // },
-      headers: {
-        Authorization: `Bearer ${token}`
+    const response = await axios.get(
+      'https:{{host}}/administrators?search=test_admin&disabled_status=disabled',
+      {
+        // params: {
+        //   search: 'test_admin',
+        //   disabled_status: 'disabled'
+        // },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    })
+    )
 
     if (response.status === 200 || response.status === 201) {
       useGeneralStore().setLoadingToFalse()
@@ -208,11 +210,15 @@ const fetchUsersData = async () => {
 const saveUserData = async (user: any) => {
   loading.value = true
   try {
-    const response = await axios.post('https:{{host}}/administrators?search=test_admin&disabled_status=disabled', user, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const response = await axios.post(
+      'https:{{host}}/administrators?search=test_admin&disabled_status=disabled',
+      user,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    })
+    )
 
     // Check if response status is 200 or 201
     if (response.status === 200 || response.status === 201) {
@@ -402,33 +408,31 @@ onMounted(async () => {
                       v-bind="componentField"
                     >
                     </vue-tel-input>
-                    
                   </FormControl>
 
                   <FormMessage for="phone" />
                 </FormItem>
               </FormField>
 
-             
-
-              <FormField v-for="item in items" v-slot="{ value, handleChange }" 
-              :key="item.id" type="checkbox" :value="item.id" :unchecked-value="false" 
-              name="permissions">
-          <FormItem class="flex flex-row items-start space-x-3 space-y-0">
-            <FormControl>
-              <Checkbox
-                :checked="value.includes(item.id)"
-                @update:checked="handleChange"
-              />
-            </FormControl>
-            <FormLabel class="font-normal">
-              {{ item.label }}
-            </FormLabel>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-        
-            
+              <FormField
+                v-for="item in items"
+                v-slot="{ value, handleChange }"
+                :key="item.id"
+                type="checkbox"
+                :value="item.id"
+                :unchecked-value="false"
+                name="permissions"
+              >
+                <FormItem class="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox :checked="value.includes(item.id)" @update:checked="handleChange" />
+                  </FormControl>
+                  <FormLabel class="font-normal">
+                    {{ item.label }}
+                  </FormLabel>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
 
               <Button :disabled="loading" type="submit">
                 <Loader2
@@ -452,15 +456,12 @@ onMounted(async () => {
           Admin
           <p class="text-xs text-[#02072199] py-2">List of Weehr Admin</p>
         </div>
-         <div class="flex flex-col">
-          
-        </div>
-<Search/>
-       
+        <div class="flex flex-col"></div>
+        <Search />
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">
-        <Table >
+        <Table>
           <TableHeader>
             <TableRow
               class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200"
@@ -470,17 +471,17 @@ onMounted(async () => {
               <TableHead>Modular Permission</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody >
+          <TableBody>
             <TableRow v-for="user in users" :key="user._id">
-              <TableCell class="font-medium">{{ user.firstName }} {{user.lastName}}</TableCell>
+              <TableCell class="font-medium">{{ user.firstName }} {{ user.lastName }}</TableCell>
               <TableCell>{{ user.admin_type }}</TableCell>
-              <TableCell>{{ user.items}}</TableCell>
+              <TableCell>{{ user.items }}</TableCell>
               <TableCell>
                 <button
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
-                  {{ user.disabled ?   'Inactive' : 'Active' }}
+                  {{ user.disabled ? 'Inactive' : 'Active' }}
                 </button>
               </TableCell>
               <TableCell>

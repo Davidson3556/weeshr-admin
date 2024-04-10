@@ -43,7 +43,7 @@ const formSchema = toTypedSchema(
       .min(2, { message: 'Vendor name must be at least 2 characters long' })
       .max(50, { message: 'Vendor name cannot be longer than 50 characters' })
       .nonempty('Please enter your first name'),
- 
+
     userEmail: z.string().email('Please enter a valid email address'),
     category: z.string().nonempty('Please select Category'),
     status: z.boolean().optional(),
@@ -57,7 +57,7 @@ const { handleSubmit } = useForm({
 const newUser = ref({
   vendor: '',
   userEmail: '',
-  category:'',
+  category: ''
 })
 const sheetOpen = ref(false)
 const loading = ref(false)
@@ -72,7 +72,6 @@ const onSubmit = handleSubmit(async (values) => {
     email: values.userEmail,
     category: values.category,
     phone: {
-      
       phoneNumber: values.phone
     },
     dateJoined: formattedDate.value,
@@ -89,7 +88,7 @@ const onSubmit = handleSubmit(async (values) => {
   newUser.value = {
     vendor: '',
     userEmail: '',
-    category: '',
+    category: ''
   }
 })
 
@@ -102,22 +101,25 @@ const fetchUsersData = async () => {
   toast({
     title: 'Loading Data',
     description: 'Fetching data...',
-    duration: 0, // Set duration to 0 to make it indefinite until manually closed
-  });
+    duration: 0 // Set duration to 0 to make it indefinite until manually closed
+  })
 
   // useGeneralStore().setLoading(true)
   try {
     // Set loading to true
 
-    const response = await axios.get('https:{{host}}/administrators?search=test_admin&disabled_status=disabled', {
-      // params: {
-      //   search: 'test_admin',
-      //   disabled_status: 'disabled'
-      // },
-      headers: {
-        Authorization: `Bearer ${token}`
+    const response = await axios.get(
+      'https:{{host}}/administrators?search=test_admin&disabled_status=disabled',
+      {
+        // params: {
+        //   search: 'test_admin',
+        //   disabled_status: 'disabled'
+        // },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    })
+    )
 
     if (response.status === 200 || response.status === 201) {
       useGeneralStore().setLoadingToFalse()
@@ -163,11 +165,15 @@ const fetchUsersData = async () => {
 const saveUserData = async (user: any) => {
   loading.value = true
   try {
-    const response = await axios.post('https:{{host}}/administrators?search=test_admin&disabled_status=disabled', user, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const response = await axios.post(
+      'https:{{host}}/administrators?search=test_admin&disabled_status=disabled',
+      user,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    })
+    )
 
     // Check if response status is 200 or 201
     if (response.status === 200 || response.status === 201) {
@@ -273,7 +279,6 @@ onMounted(async () => {
                 </FormItem>
               </FormField>
 
-
               <FormField v-slot="{ componentField }" name="userEmail">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Email</FormLabel>
@@ -290,22 +295,22 @@ onMounted(async () => {
                   <FormMessage />
                 </FormItem>
               </FormField>
-              
+
               <FormField v-slot="{ componentField }" name="phone">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Phone Number</FormLabel>
                   <FormControl>
                     <div>
-                    <vue-tel-input
-                      mode="international"
-                      id="phone"
-                      type="tel"
-                      placeholder="Last Name"
-                      class="focus-visible:ring-blue-600"
-                      v-bind="componentField"
-                    >
-                    </vue-tel-input>
-                  </div>
+                      <vue-tel-input
+                        mode="international"
+                        id="phone"
+                        type="tel"
+                        placeholder="Last Name"
+                        class="focus-visible:ring-blue-600"
+                        v-bind="componentField"
+                      >
+                      </vue-tel-input>
+                    </div>
                   </FormControl>
 
                   <FormMessage for="phone" />
@@ -317,7 +322,7 @@ onMounted(async () => {
                   <FormLabel>Category</FormLabel>
                   <select
                     v-bind="componentField"
-                    id="category" 
+                    id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Category"
                   >
@@ -325,12 +330,10 @@ onMounted(async () => {
                     <option value="cash">Cash</option>
                     <option value="gift">Gift Cards</option>
                     <option value="all">All Category</option>
-
                   </select>
                   <FormMessage for="category" />
                 </FormItem>
               </FormField>
-            
 
               <Button :disabled="loading" type="submit">
                 <Loader2
@@ -354,11 +357,11 @@ onMounted(async () => {
           Vendors
           <p class="text-xs text-[#02072199] py-2">List of Weeshr Vendors</p>
         </div>
-        <Search/>
+        <Search />
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">
-        <Table >
+        <Table>
           <TableHeader>
             <TableRow
               class="text-xs sm:text-sm md:text-base text-[#02072199] font-semibold bg-gray-200"
@@ -370,7 +373,7 @@ onMounted(async () => {
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody >
+          <TableBody>
             <TableRow v-for="user in users" :key="user._id">
               <TableCell class="font-medium">{{ user.vendor }}</TableCell>
               <TableCell>{{ user.category }}</TableCell>
@@ -381,7 +384,7 @@ onMounted(async () => {
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
                   class="px-4 py-2 text-sm text-white rounded-md"
                 >
-                  {{ user.disabled ?   'Inactive' : 'Active' }}
+                  {{ user.disabled ? 'Inactive' : 'Active' }}
                 </button>
               </TableCell>
               <TableCell>
