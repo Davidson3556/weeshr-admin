@@ -52,43 +52,12 @@ const formSchema = toTypedSchema(
     gender: z.string().nonempty('Please select your gender'),
     phone: z.string().nonempty('Please enter your phone number'),
     admin_type: z.string().nonempty('Please select your admin_type'),
-    items: z.array(z.string()).refine((value) => value.some((item) => item), {
-      message: 'You have to select at least one item.'
-    })
+    permissions: z.string().nonempty('Please select Modular Permission')
   })
 )
-const items = [
-  {
-    id: 'recents',
-    label: 'Recents'
-  },
-  {
-    id: 'home',
-    label: 'Home'
-  },
-  {
-    id: 'applications',
-    label: 'Applications'
-  },
-  {
-    id: 'desktop',
-    label: 'Desktop'
-  },
-  {
-    id: 'downloads',
-    label: 'Downloads'
-  },
-  {
-    id: 'documents',
-    label: 'Documents'
-  }
-]
 
 const { handleSubmit } = useForm({
-  validationSchema: formSchema,
-  initialValues: {
-    items: ['recents', 'home']
-  }
+  validationSchema: formSchema
 })
 
 const newUser = ref({
@@ -98,6 +67,13 @@ const newUser = ref({
   gender: '',
   dob: ''
 })
+
+const permissions = ref({
+  canRead: false,
+  canWrite: false,
+  canDelete: false
+})
+
 const sheetOpen = ref(false)
 const loading = ref(false)
 const superAdminStore = useSuperAdminStore()
@@ -117,7 +93,7 @@ const onSubmit = handleSubmit(async (values) => {
       phoneNumber: values.phone
     },
     dateJoined: formattedDate.value,
-    items: values.items,
+    permissions: values.permissions,
     admin_type: values.admin_type
   }
 
@@ -413,24 +389,190 @@ onMounted(async () => {
                   <FormMessage for="phone" />
                 </FormItem>
               </FormField>
+              <FormField v-slot="{ componentField }" name="type">
+                <FormItem>
+                  <FormLabel>Admin Type</FormLabel>
+                  <select
+                    v-bind="componentField"
+                    id="type"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Select Admin type"
+                  >
+                    <option value="" disabled selected hidden>Select Admin Type</option>
+                    <option value="super_admin">Super Admin</option>
+                    <option value="admin">Admin</option>
+                    <option value="cxperience">Cxperience</option>
+                    <option value="flutter">Flutter</option>
+                  </select>
+                  <FormMessage for="gender" />
+                </FormItem>
+              </FormField>
 
-              <FormField
-                v-for="item in items"
-                v-slot="{ value, handleChange }"
-                :key="item.id"
-                type="checkbox"
-                :value="item.id"
-                :unchecked-value="false"
-                name="permissions"
-              >
-                <FormItem class="flex flex-row items-start space-x-3 space-y-0">
+              <FormField v-slot="{ componentField }" name="permissions">
+                <FormItem>
+                  <FormLabel>Modular Permissions</FormLabel>
                   <FormControl>
-                    <Checkbox :checked="value.includes(item.id)" @update:checked="handleChange" />
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="dashboard"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="dashboard"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Dashboard</div>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="users"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="users"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Users</div>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="weeshes"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="weeshes"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Weeshes</div>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="deposit"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="deposit"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Deposit</div>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="bank"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="bank"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:underline peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Bank</div>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="support"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="support"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Support</div>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="configuration"
+                        type="checkbox"
+                        class="hidden peer"
+                        value="configuration"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="configuration"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Configuration</div>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="analytics"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="analytics"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Analytics</div>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="relative flex items-start ml-2">
+                      <input
+                        id="support"
+                        type="checkbox"
+                        class="hidden peer"
+                        v-bind="componentField"
+                      />
+                      <label
+                        for="support"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Support</div>
+                        </div>
+                      </label>
+                    </div>
+                    <div class="relative flex items-start ml-2">
+                      <input id="log" type="checkbox" class="hidden peer" v-bind="componentField" />
+                      <label
+                        for="log"
+                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+                      >
+                        <div class="flex items-center justify-center w-full">
+                          <div class="text-sm text-brand-black">Activity Log</div>
+                        </div>
+                      </label>
+                    </div>
                   </FormControl>
-                  <FormLabel class="font-normal">
-                    {{ item.label }}
-                  </FormLabel>
-                  <FormMessage />
+                  <FormMessage for="permissions" />
                 </FormItem>
               </FormField>
 
@@ -475,7 +617,7 @@ onMounted(async () => {
             <TableRow v-for="user in users" :key="user._id">
               <TableCell class="font-medium">{{ user.firstName }} {{ user.lastName }}</TableCell>
               <TableCell>{{ user.admin_type }}</TableCell>
-              <TableCell>{{ user.items }}</TableCell>
+              <TableCell>{{ user.permissions }}</TableCell>
               <TableCell>
                 <button
                   :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"

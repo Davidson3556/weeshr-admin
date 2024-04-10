@@ -300,17 +300,15 @@ onMounted(async () => {
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Phone Number</FormLabel>
                   <FormControl>
-                    <div>
-                      <vue-tel-input
-                        mode="international"
-                        id="phone"
-                        type="tel"
-                        placeholder="Last Name"
-                        class="focus-visible:ring-blue-600"
-                        v-bind="componentField"
-                      >
-                      </vue-tel-input>
-                    </div>
+                    <vue-tel-input
+                      mode="international"
+                      id="phone"
+                      type="tel"
+                      placeholder="Last Name"
+                      class="focus-visible:ring-blue-600"
+                      v-bind="componentField"
+                    >
+                    </vue-tel-input>
                   </FormControl>
 
                   <FormMessage for="phone" />

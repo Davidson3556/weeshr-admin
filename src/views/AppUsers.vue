@@ -27,6 +27,18 @@ import {
   TableHead
 } from '@/components/ui/table'
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+
+const position = ref('bottom')
+
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -293,8 +305,45 @@ onMounted(async () => {
 
                   <FormMessage />
                 </FormItem>
-              </FormField>
 
+              </FormField>
+<div class="flex flex-row justify-between gap-2">
+                <FormField v-slot="{ componentField }" name="gender" class="w-[40%]">
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <select
+                      v-bind="componentField"
+                      id="gender"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Select a category"
+                    >
+                      <option value="" disabled selected hidden>Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                    <FormMessage for="gender" />
+                  </FormItem>
+                </FormField>
+
+                <div class="w-[70%]">
+                  <FormField v-slot="{ componentField }" name="dob">
+                    <FormItem v-auto-animate>
+                      <FormLabel class="text-blue-900">Date of Birth</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="dob"
+                          type="date"
+                          placeholder="Date of Birth"
+                          class="focus-visible:ring-blue-600"
+                          v-bind="componentField"
+                        />
+                      </FormControl>
+
+                      <FormMessage for="dob" />
+                    </FormItem>
+                  </FormField>
+                </div>
+              </div>
               <FormField v-slot="{ componentField }" name="phone">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Phone Number</FormLabel>
@@ -313,6 +362,7 @@ onMounted(async () => {
                   <FormMessage for="phone" />
                 </FormItem>
               </FormField>
+
 
               <FormField v-slot="{ componentField }" name="category">
                 <FormItem>
@@ -354,6 +404,107 @@ onMounted(async () => {
           App Users
           <p class="text-xs text-[#02072199] py-2">List of Weeshr App Users</p>
         </div>
+        <div class="mx-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline">
+                Gender
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 ml-2 -mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent class="w-56 ">
+              <DropdownMenuLabel>Gender</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup v-model="position">
+                <DropdownMenuRadioItem value="male"> Male </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="female"> Female </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline">
+                Birth Month
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 ml-2 -mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent class="w-56 space-y-4">
+              <DropdownMenuLabel>Birth Month</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup v-model="position">
+                <DropdownMenuRadioItem value="jan"> January </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="feb"> February </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="march"> March </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="april"> April </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="may"> May </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="june"> June </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="july"> July </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="aug"> August </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="sep"> September </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="oct"> October </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="nov"> November </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dec"> December </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline">
+                Status
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 ml-2 -mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent class="w-56 ">
+              <DropdownMenuLabel>Status</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup v-model="position">
+                <DropdownMenuRadioItem value=""> Active </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="">Not active  </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
         <Search />
       </div>
 
