@@ -68,13 +68,7 @@ const newUser = ref({
   dob: ''
 })
 
-const updatePermissions = (permission, checked) => {
-  if (checked) {
-    permissions.value.push(permission); // Add to array
-  } else {
-    permissions.value = permissions.value.filter(p => p !== permission); // Remove from array
-  }
-};
+
 
 const sheetOpen = ref(false)
 const loading = ref(false)
@@ -427,9 +421,7 @@ onMounted(async () => {
     :id="permissions"
     type="checkbox"
     class="hidden peer"
-    v-bind="componentField"
-    :checked="permissions.includes(permission)" 
-    @change="updatePermissions(permissions, $event.target.checked)"
+    v-bind="componentField" 
   />
   <label
     :for="permissions"
