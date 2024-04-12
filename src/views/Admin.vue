@@ -68,11 +68,13 @@ const newUser = ref({
   dob: ''
 })
 
-const permissions = ref({
-  canRead: false,
-  canWrite: false,
-  canDelete: false
-})
+const updatePermissions = (permission, checked) => {
+  if (checked) {
+    permissions.value.push(permission); // Add to array
+  } else {
+    permissions.value = permissions.value.filter(p => p !== permission); // Remove from array
+  }
+};
 
 const sheetOpen = ref(false)
 const loading = ref(false)
@@ -113,9 +115,17 @@ const onSubmit = handleSubmit(async (values) => {
   }
 })
 
+
 // Define a ref to hold the users data
 // const users = ref([]);
-const users = ref<any[]>([]) // Specify the type as any[] or the correct type of your user objects
+const users = ref<any[]>([
+  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', admin_type: 'Super Admin', permissions:'Dashboard, Users, Weeshes, Deport, Bank,Support,Configuration,Analysics,Activity log'  },
+  { _id: 2, firstName: 'Saloni', lastName: 'Smith', admin_type: 'Admin', permissions: 'Dashboard, Users, Weeshes, Deport, Bank,Support,Activity log'},
+  { _id: 3, firstName: 'Bada', lastName: 'Right', admin_type: 'Admin', permissions: 'Dashboard, Weeshes, Deport, Bank,Support,Configuration,Activity log'},
+  { _id: 4, firstName: 'Emily', lastName: 'Stone', admin_type: 'Flutter', permissions: 'Dashboard, Weeshes, Deport, Bank,Support,Configuration,Activity log'},
+  { _id: 5, firstName: ' Kunle', lastName: 'Blue', admin_type: 'Cxperience', permissions: 'Dashboard, Weeshes, Deport, Bank,Support,Configuration,Activity log'},
+
+]);
 
 // Define a function to fetch users data
 const fetchUsersData = async () => {
@@ -239,7 +249,6 @@ const saveUserData = async (user: any) => {
 const toggleStatus = (user: { status: boolean }) => {
   user.status = !user.status
 }
-const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
 
 // onMounted(fetchUsersData);
 
@@ -251,7 +260,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex-col flex bg-[#f0f8ff] min-h-[400px] px-4 sm:px-10 pb-10">
-    <MainNav class="mx-6" headingText="User > Admin" />
+    <MainNav class="mx-6" headingText="wae"  />
     <div class="px-10 py-10 ml-auto">
       <Sheet :close="sheetOpen">
         <SheetTrigger as-child>
@@ -371,7 +380,7 @@ onMounted(async () => {
                 </div>
               </div>
 
-              <FormField v-slot="{ componentField }" name="phone">
+              <!-- <FormField v-slot="{ componentField }" name="phone">
                 <FormItem v-auto-animate>
                   <FormLabel class="text-blue-900">Phone Number</FormLabel>
                   <FormControl>
@@ -388,7 +397,7 @@ onMounted(async () => {
 
                   <FormMessage for="phone" />
                 </FormItem>
-              </FormField>
+              </FormField> -->
               <FormField v-slot="{ componentField }" name="type">
                 <FormItem>
                   <FormLabel>Admin Type</FormLabel>
@@ -412,169 +421,31 @@ onMounted(async () => {
                 <FormItem>
                   <FormLabel>Modular Permissions</FormLabel>
                   <FormControl>
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="dashboard"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="dashboard"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Dashboard</div>
-                        </div>
-                      </label>
-                    </div>
+                 <!-- Example Checkbox Markup -->
+<div v-for="permissions in ['Dashboard', 'Users', 'Weeshes', 'Deposit', 'Bank', 'Support', 'Configuration', 'Analytics', 'Log']" :key="permissions" class="relative flex items-start ml-2">
+  <input
+    :id="permissions"
+    type="checkbox"
+    class="hidden peer"
+    v-bind="componentField"
+    :checked="permissions.includes(permission)" 
+    @change="updatePermissions(permissions, $event.target.checked)"
+  />
+  <label
+    :for="permissions"
+    class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+  >
+    <div class="flex items-center justify-center w-full">
+      <div class="text-sm text-brand-black">{{ permissions }}</div>
+    </div>
+  </label>
+</div>
 
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="users"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="users"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Users</div>
-                        </div>
-                      </label>
-                    </div>
-
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="weeshes"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="weeshes"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Weeshes</div>
-                        </div>
-                      </label>
-                    </div>
-
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="deposit"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="deposit"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Deposit</div>
-                        </div>
-                      </label>
-                    </div>
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="bank"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="bank"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:underline peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Bank</div>
-                        </div>
-                      </label>
-                    </div>
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="support"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="support"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Support</div>
-                        </div>
-                      </label>
-                    </div>
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="configuration"
-                        type="checkbox"
-                        class="hidden peer"
-                        value="configuration"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="configuration"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Configuration</div>
-                        </div>
-                      </label>
-                    </div>
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="analytics"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="analytics"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Analytics</div>
-                        </div>
-                      </label>
-                    </div>
-                    <div class="relative flex items-start ml-2">
-                      <input
-                        id="support"
-                        type="checkbox"
-                        class="hidden peer"
-                        v-bind="componentField"
-                      />
-                      <label
-                        for="support"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Support</div>
-                        </div>
-                      </label>
-                    </div>
-                    <div class="relative flex items-start ml-2">
-                      <input id="log" type="checkbox" class="hidden peer" v-bind="componentField" />
-                      <label
-                        for="log"
-                        class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
-                      >
-                        <div class="flex items-center justify-center w-full">
-                          <div class="text-sm text-brand-black">Activity Log</div>
-                        </div>
-                      </label>
-                    </div>
                   </FormControl>
                   <FormMessage for="permissions" />
                 </FormItem>
               </FormField>
+              
 
               <Button :disabled="loading" type="submit">
                 <Loader2
@@ -611,29 +482,30 @@ onMounted(async () => {
               <TableHead> Name </TableHead>
               <TableHead>Admin Type</TableHead>
               <TableHead>Modular Permission</TableHead>
+              <TableHead></TableHead>
+
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow v-for="user in users" :key="user._id">
               <TableCell class="font-medium">{{ user.firstName }} {{ user.lastName }}</TableCell>
               <TableCell>{{ user.admin_type }}</TableCell>
-              <TableCell>{{ user.permissions }}</TableCell>
-              <TableCell>
-                <button
-                  :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
-                  class="px-4 py-2 text-sm text-white rounded-md"
-                >
-                  {{ user.disabled ? 'Inactive' : 'Active' }}
-                </button>
-              </TableCell>
-              <TableCell>
-                <!-- <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
-                     stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg> -->
-                <!-- Add any action button or link here -->
-              </TableCell>
+              
+<TableCell>
+
+        <div class="flex flex-wrap gap-2">
+          <!-- Display each permission as a pill -->
+          <template v-for="permission in user.permissions.split(',')">
+            <span class="inline-block bg-[#373B4D] text-[#F8F9FF] rounded-full px-2 py-1 text-sm">{{ permission }}</span>
+          </template>
+        </div>
+      </TableCell>
+      <TableCell>
+        <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D" stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</TableCell>
+
             </TableRow>
           </TableBody>
         </Table>
@@ -642,3 +514,4 @@ onMounted(async () => {
   </div>
 </template>
 @/stores/super-admin/super-admin@/stores/super-admin/super-admin
+admin

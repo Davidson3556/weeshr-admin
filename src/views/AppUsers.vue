@@ -48,27 +48,37 @@ import { useGeneralStore } from '@/stores/general-use'
 
 const formSchema = toTypedSchema(
   z.object({
-    vendor: z
+    firstName: z
       .string()
-      .min(2, { message: 'Vendor name must be at least 2 characters long' })
-      .max(50, { message: 'Vendor name cannot be longer than 50 characters' })
+      .min(2, { message: 'First name must be at least 2 characters long' })
+      .max(50, { message: 'First name cannot be longer than 50 characters' })
       .nonempty('Please enter your first name'),
+    lastName: z
+      .string()
+      .min(2, { message: 'Last name must be at least 2 characters long' })
+      .max(50, { message: 'Last name cannot be longer than 50 characters' })
+      .nonempty('Please enter your last name'),
 
     userEmail: z.string().email('Please enter a valid email address'),
-    category: z.string().nonempty('Please select Category'),
-    status: z.boolean().optional(),
-    phone: z.string().nonempty('Please enter your phone number')
+    phone: z.string().nonempty('Please enter your phone number'),
+    gender: z.string().nonempty(''),
+    dob: z.string().nonempty('Please enter your Date of birth'),
+    status: z.string().nonempty('Please select Modular Status')
+
   })
 )
 const { handleSubmit } = useForm({
   validationSchema: formSchema
 })
-
 const newUser = ref({
-  vendor: '',
+  firstName: '',
   userEmail: '',
-  category: ''
+  lastName: '',
+  gender: '',
+  dob: '',
+  status:''
 })
+
 const sheetOpen = ref(false)
 const loading = ref(false)
 const superAdminStore = useSuperAdminStore()
@@ -78,17 +88,19 @@ const onSubmit = handleSubmit(async (values) => {
   loading.value = true
 
   const user = {
-    vendor: values.vendor,
+    firstName: values.firstName,
+    lastName: values.lastName,
     email: values.userEmail,
-    category: values.category,
+    gender: values.gender,
+    dob: values.dob,
     phone: {
       countryCode: '+234',
       phoneNumber: values.phone
     },
-    dateJoined: formattedDate.value,
-    disabled: values.status || false
-  }
+    status: values.status,
 
+
+  }
   await saveUserData(user)
 
   sheetOpen.value = false
@@ -97,16 +109,25 @@ const onSubmit = handleSubmit(async (values) => {
 
   // Reset form fields
   newUser.value = {
-    vendor: '',
+    firstName: '',
+    lastName: '',
     userEmail: '',
-    category: ''
+    gender: '',
+    dob: '',
+    status:'',
   }
 })
 
 // Define a ref to hold the users data
 // const users = ref([]);
-const users = ref<any[]>([]) // Specify the type as any[] or the correct type of your user objects
+  const users = ref<any[]>([
+  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', dob: '01 Nov 1974', gender:'female', balance:'$11,111'  },
+  { _id: 2, firstName: 'Saloni', lastName: 'Smith', dob: '30 Nov 2001', gender:'Male', balance:'$1,111'},
+  { _id: 3, firstName: 'Bada', lastName: 'Right', dob: '01 Nov 1974', gender:'Male', balance:'$19,611'},
+  { _id: 4, firstName: 'Emily', lastName: 'Stone', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
+  { _id: 5, firstName: ' Kunle', lastName: 'Blue', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
 
+]);
 // Define a function to fetch users data
 const fetchUsersData = async () => {
   toast({
@@ -226,10 +247,32 @@ const saveUserData = async (user: any) => {
   }
 }
 
-const toggleStatus = (user: { status: boolean }) => {
-  user.status = !user.status
-}
-const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
+
+const getStatusIconUrl = (status: string): string => {
+  switch (status.trim().toLowerCase()) {
+    case 'featured':
+      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/UserFeaturing_rj4fnp.svg';
+    case 'verified':
+    case 'f': // Assuming 'F' also uses the verified SVG
+      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/Property_1_Weeshr_Verified_th0oq2.svg';
+    case 'pf':
+      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Public_Figure_wbek9n.svg';
+    case 'i':
+      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Influencer_atepen.svg';
+    case 'r':
+      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Regular_smttkj.svg';
+    case 'celeb':
+      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/Property_1_Weeshr_Verified_th0oq2.svg';
+    default:
+      return ''; // Provide a default SVG URL or empty string for unknown status
+  }
+};
+
+const StatusIcon = (props: { status: string }): { statusIconUrl: string } => {
+  const statusIconUrl = getStatusIconUrl(props.status);
+
+  return { statusIconUrl };
+};
 
 // onMounted(fetchUsersData);
 
@@ -362,7 +405,33 @@ onMounted(async () => {
                   <FormMessage for="phone" />
                 </FormItem>
               </FormField>
+              <FormField v-slot="{ componentField }" name="status">
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <FormControl>
+                 <!-- Example Checkbox Markup -->
+<div v-for="status in ['Feautered', 'verified', 'PF', 'F', 'I', 'R', 'celeb']" :key="status" class="relative flex items-start ml-2">
+  <input
+    :id="status"
+    type="checkbox"
+    class="hidden peer"
+    v-bind="componentField"
+   
+  />
+  <label
+    :for="status"
+    class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
+  >
+    <div class="flex items-center justify-center w-full">
+      <div class="text-sm text-brand-black">{{ status }}</div>
+    </div>
+  </label>
+</div>
 
+                  </FormControl>
+                  <FormMessage for="status" />
+                </FormItem>
+              </FormField>
 
               <FormField v-slot="{ componentField }" name="category">
                 <FormItem>
@@ -524,26 +593,14 @@ onMounted(async () => {
           </TableHeader>
           <TableBody>
             <TableRow v-for="user in users" :key="user._id">
-              <TableCell class="font-medium">{{ user.vendor }}</TableCell>
-              <TableCell>{{ user.category }}</TableCell>
-              <TableCell>{{ user.dateJoined }}</TableCell>
-              <TableCell>{{ user.deliveryrate }}</TableCell>
+              <TableCell class="font-medium">{{ user.firstName }} </TableCell>
+              <TableCell class="font-medium">{{ user.firstName }} {{ user.lastName }}</TableCell>
+              <TableCell class="font-medium">{{ user.dob}} </TableCell>
+              <TableCell class="font-medium">{{ user.gender }} </TableCell>
+              <TableCell>{{ user.balance }}</TableCell>
               <TableCell>
-                <button
-                  :class="{ 'bg-[#00C37F]': user.status, 'bg-[#020721]': !user.status }"
-                  class="px-4 py-2 text-sm text-white rounded-md"
-                >
-                  {{ user.disabled ? 'Inactive' : 'Active' }}
-                </button>
-              </TableCell>
-              <TableCell>
-                <!-- <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D"
-                     stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg> -->
-                <!-- Add any action button or link here -->
-              </TableCell>
+            <StatusIcon :status="user.status" />
+          </TableCell>
             </TableRow>
           </TableBody>
         </Table>
