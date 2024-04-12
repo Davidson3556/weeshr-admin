@@ -250,6 +250,9 @@ onMounted(async () => {
   // useGeneralStore().setLoading(true);
   fetchUsersData()
 })
+
+const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
+
 </script>
 
 <template>
