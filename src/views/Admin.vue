@@ -65,7 +65,8 @@ const newUser = ref({
   userEmail: '',
   lastName: '',
   gender: '',
-  dob: ''
+  dob: '',
+  permissions: '',
 })
 
 
@@ -105,7 +106,8 @@ const onSubmit = handleSubmit(async (values) => {
     lastName: '',
     userEmail: '',
     gender: '',
-    dob: ''
+    dob: '',
+    permissions:'',
   }
 })
 
