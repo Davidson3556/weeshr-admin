@@ -121,7 +121,7 @@ const onSubmit = handleSubmit(async (values) => {
 // Define a ref to hold the users data
 // const users = ref([]);
   const users = ref<any[]>([
-  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', dob: '01 Nov 1974', gender:'female', balance:'$11,111'  },
+  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
   { _id: 2, firstName: 'Saloni', lastName: 'Smith', dob: '30 Nov 2001', gender:'Male', balance:'$1,111'},
   { _id: 3, firstName: 'Bada', lastName: 'Right', dob: '01 Nov 1974', gender:'Male', balance:'$19,611'},
   { _id: 4, firstName: 'Emily', lastName: 'Stone', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
