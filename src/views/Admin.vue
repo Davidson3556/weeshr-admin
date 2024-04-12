@@ -490,7 +490,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
 
         <div class="flex flex-wrap gap-2">
           <!-- Display each permission as a pill -->
-          <template v-for="(permission: string) in user.permissions.split(',')" :key="permission">
+          <template v-for="permission in user.permissions.split(',')":key="permission">
             <span class="inline-block bg-[#373B4D] text-[#F8F9FF] rounded-full px-2 py-1 text-sm">{{ permission }}</span>
           </template>
         </div>
