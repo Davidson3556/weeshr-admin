@@ -118,11 +118,11 @@ const onSubmit = handleSubmit(async (values) => {
 // Define a ref to hold the users data
 // const users = ref([]);
   const users = ref<any[]>([
-  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', dob: '01 Nov 1974', gender:'female', balance:'$11,111', status:['Featured','WeeshrVerified']},
-  { _id: 2, firstName: 'Saloni', lastName: 'Smith', dob: '30 Nov 2001', gender:'Male', balance:'$1,111',status:['WeeshrVerified']},
-  { _id: 3, firstName: 'Bada', lastName: 'Right', dob: '01 Nov 1974', gender:'Male', balance:'$19,611'},
-  { _id: 4, firstName: 'Emily', lastName: 'Stone', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
-  { _id: 5, firstName: ' Kunle', lastName: 'Blue', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
+  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', dob: '01 Nov 1974', gender:'female', balance:'$11,111', status:['Regular','BlueVerified','Featured']},
+  { _id: 2, firstName: 'Saloni', lastName: 'Smith', dob: '30 Nov 2001', gender:'male', balance:'$1,111',status:[ 'PublicFigure','Influencer','WeeshrVerified','Featured']},
+  { _id: 3, firstName: 'Bada', lastName: 'Right', dob: '01 Nov 1974', gender:'male', balance:'$19,611', status:['Regular','NonVerified','Featured']},
+  { _id: 4, firstName: 'Emily', lastName: 'Stone', dob: '01 Nov 1974', gender:'female', balance:'$11,111',status:['Regular','NonVerified']},
+  { _id: 5, firstName: ' Kunle', lastName: 'Blue', dob: '01 Nov 1974', gender:'female', balance:'$11,111',status:['Staff','NonVerified',]},
 
 ]);
 // / Define a function to get the URL of the status icon based on the status value
@@ -595,10 +595,10 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
               <TableCell class="font-medium">{{ user.dob}} </TableCell>
               <TableCell class="font-medium">{{ user.gender }} </TableCell>
               <TableCell>{{ user.balance }}</TableCell>
-              <TableCell>
-              <!-- Render multiple status icons based on user's status array -->
+              <TableCell class="min-h-16 sm:min-h-12">
+                              <!-- Render multiple status icons based on user's status array -->
               <template v-for="status in user.status" :key="status">
-                <img :src="getStatusIconUrl(status)" :alt="status" class="h-6 w-6 mr-1" />
+                <img :src="getStatusIconUrl(status)" :alt="status" class="h-5 w-19 mr-1" />
               </template>
             </TableCell>
           <TableCell>
