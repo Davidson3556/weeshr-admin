@@ -32,7 +32,6 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
@@ -97,9 +96,7 @@ const onSubmit = handleSubmit(async (values) => {
       countryCode: '+234',
       phoneNumber: values.phone
     },
-    status: values.status,
-
-
+    disabled: values.status || false
   }
   await saveUserData(user)
 
@@ -121,13 +118,31 @@ const onSubmit = handleSubmit(async (values) => {
 // Define a ref to hold the users data
 // const users = ref([]);
   const users = ref<any[]>([
-  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
-  { _id: 2, firstName: 'Saloni', lastName: 'Smith', dob: '30 Nov 2001', gender:'Male', balance:'$1,111'},
+  { _id: 1, firstName: 'Abiola', lastName: 'Tendo', dob: '01 Nov 1974', gender:'female', balance:'$11,111', status:['Featured','WeeshrVerified']},
+  { _id: 2, firstName: 'Saloni', lastName: 'Smith', dob: '30 Nov 2001', gender:'Male', balance:'$1,111',status:['WeeshrVerified']},
   { _id: 3, firstName: 'Bada', lastName: 'Right', dob: '01 Nov 1974', gender:'Male', balance:'$19,611'},
   { _id: 4, firstName: 'Emily', lastName: 'Stone', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
   { _id: 5, firstName: ' Kunle', lastName: 'Blue', dob: '01 Nov 1974', gender:'female', balance:'$11,111'},
 
 ]);
+// / Define a function to get the URL of the status icon based on the status value
+const getStatusIconUrl = (status: string) => {
+  // Define a mapping of status values to image URLs
+  const statusIconUrls: Record<string, string> = {
+    Featured: 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/UserFeaturing_rj4fnp.svg',
+    NonVerified: 'https://res.cloudinary.com/dufimctfc/image/upload/v1713424079/Property_1_Not_Verified_tlgd9k.svg',
+    BlueVerified: 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/UserVerificationStatus_oglh0k.svg',
+    WeeshrVerified: 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/Property_1_Weeshr_Verified_th0oq2.svg',
+    Staff: 'https://res.cloudinary.com/dufimctfc/image/upload/v1713424079/Property_1_Staff_c49bd5.svg',
+    PublicFigure: 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Public_Figure_wbek9n.svg',
+    Regular: 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Regular_smttkj.svg',
+    Influencer: 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/UserTypeI_lfcvbw.svg',
+    // Add more mappings as needed
+  };
+
+  // Return the corresponding icon URL based on the status value
+  return statusIconUrls[status] || ''; // Default to empty string if status is not found
+};
 // Define a function to fetch users data
 const fetchUsersData = async () => {
   toast({
@@ -198,7 +213,7 @@ const saveUserData = async (user: any) => {
   loading.value = true
   try {
     const response = await axios.post(
-      'https://api.staging.weeshr.com/api/administrators?search=test_admin&disabled_status=disabled',
+      'https:{{host}}/administrators?search=test_admin&disabled_status=disabled',
       user,
       {
         headers: {
@@ -248,31 +263,7 @@ const saveUserData = async (user: any) => {
 }
 
 
-const getStatusIconUrl = (status: string): string => {
-  switch (status.trim().toLowerCase()) {
-    case 'featured':
-      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/UserFeaturing_rj4fnp.svg';
-    case 'verified':
-    case 'f': // Assuming 'F' also uses the verified SVG
-      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/Property_1_Weeshr_Verified_th0oq2.svg';
-    case 'pf':
-      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Public_Figure_wbek9n.svg';
-    case 'i':
-      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Influencer_atepen.svg';
-    case 'r':
-      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910732/Property_1_Regular_smttkj.svg';
-    case 'celeb':
-      return 'https://res.cloudinary.com/dufimctfc/image/upload/v1712910733/Property_1_Weeshr_Verified_th0oq2.svg';
-    default:
-      return ''; // Provide a default SVG URL or empty string for unknown status
-  }
-};
 
-const StatusIcon = (props: { status: string }): { statusIconUrl: string } => {
-  const statusIconUrl = getStatusIconUrl(props.status);
-
-  return { statusIconUrl };
-};
 
 // onMounted(fetchUsersData);
 
@@ -280,6 +271,9 @@ onMounted(async () => {
   // useGeneralStore().setLoading(true);
   fetchUsersData()
 })
+
+const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
+
 </script>
 
 <template>
@@ -410,19 +404,18 @@ onMounted(async () => {
                   <FormLabel>Status</FormLabel>
                   <FormControl>
                  <!-- Example Checkbox Markup -->
-<div v-for="status in ['Feautered', 'verified', 'PF', 'F', 'I', 'R', 'celeb']" :key="status" class="relative flex items-start ml-2">
+<div v-for="status in ['Featured','NonVerified', 'BlueVerified', 'WeeshrVerified', 'Staff', 'PublicFigure', 'Regular', 'Influencer']" :key="status" class="relative flex items-start ml-2">
   <input
     :id="status"
     type="checkbox"
     class="hidden peer"
-    v-bind="componentField"
-   
+    v-bind="componentField" 
   />
   <label
     :for="status"
     class="inline-flex items-center justify-between w-auto p-2 font-medium tracking-tight border rounded-lg cursor-pointer bg-brand-light text-brand-black border-violet-500 peer-checked:border-violet-400 peer-checked:bg-violet-700 peer-checked:text-white peer-checked:font-semibold peer-checked:decoration-brand-dark decoration-2"
   >
-    <div class="flex items-center justify-center w-full">
+  <div class="flex items-center justify-center w-full">
       <div class="text-sm text-brand-black">{{ status }}</div>
     </div>
   </label>
@@ -468,14 +461,15 @@ onMounted(async () => {
     </div>
 
     <Card class="container px-4 pt-6 pb-10 mx-auto sm:px-6 lg:px-8 bg-[#FFFFFF] rounded-2xl">
-      <div class="flex items-center justify-between px-6 py-4">
-        <div class="text-2xl font-bold tracking-tight text-[#020721]">
+      <div class="flex flex-col sm:flex-row items-center justify-between px-2 sm:px-6 py-4">
+        <div class="text-lg sm:text-xl font-bold tracking-tight text-[#020721] mb-2 sm:mb-0">
           App Users
-          <p class="text-xs text-[#02072199] py-2">List of Weeshr App Users</p>
+          <p class="text-xs sm:text-sm text-[#02072199]">List of Weeshr App Users</p>
         </div>
-        <div class="mx-4">
+        <div class="flex flex-wrap justify-center sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 items-center">
+             <div class="flex items-center space-x-2 ">
           <DropdownMenu>
-            <DropdownMenuTrigger as-child>
+            <DropdownMenuTrigger as-child class="rounded-2xl bg-[#EEEFF5] ">
               <Button variant="outline">
                 Gender
                 <svg
@@ -493,7 +487,7 @@ onMounted(async () => {
                 </svg>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent class="w-56 ">
+            <DropdownMenuContent class="">
               <DropdownMenuLabel>Gender</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup v-model="position">
@@ -501,11 +495,9 @@ onMounted(async () => {
                 <DropdownMenuRadioItem value="female"> Female </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div>
+          </DropdownMenu> 
           <DropdownMenu>
-            <DropdownMenuTrigger as-child>
+            <DropdownMenuTrigger as-child class="rounded-2xl bg-[#EEEFF5]">
               <Button variant="outline">
                 Birth Month
                 <svg
@@ -542,10 +534,8 @@ onMounted(async () => {
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-        <div>
           <DropdownMenu>
-            <DropdownMenuTrigger as-child>
+            <DropdownMenuTrigger as-child class="rounded-2xl bg-[#EEEFF5]">
               <Button variant="outline">
                 Status
                 <svg
@@ -563,7 +553,7 @@ onMounted(async () => {
                 </svg>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent class="w-56 ">
+            <DropdownMenuContent >
               <DropdownMenuLabel>Status</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup v-model="position">
@@ -571,10 +561,15 @@ onMounted(async () => {
                 <DropdownMenuRadioItem value="">Not active  </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+          </DropdownMenu> 
 
-        <Search />
+        </div>
+            <Search />
+        </div>
+     
+      
+
+       
       </div>
 
       <div class="overflow-auto bg-white rounded-lg shadow">
@@ -589,6 +584,8 @@ onMounted(async () => {
               <TableHead> Gender</TableHead>
               <TableHead>Wallet Balance</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead></TableHead>
+
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -599,8 +596,16 @@ onMounted(async () => {
               <TableCell class="font-medium">{{ user.gender }} </TableCell>
               <TableCell>{{ user.balance }}</TableCell>
               <TableCell>
-            <StatusIcon :status="user.status" />
-          </TableCell>
+              <!-- Render multiple status icons based on user's status array -->
+              <template v-for="status in user.status" :key="status">
+                <img :src="getStatusIconUrl(status)" :alt="status" class="h-6 w-6 mr-1" />
+              </template>
+            </TableCell>
+          <TableCell>
+        <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D" stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</TableCell>
             </TableRow>
           </TableBody>
         </Table>

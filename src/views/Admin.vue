@@ -379,24 +379,7 @@ const formattedDate = useDateFormat(useNow(), 'ddd, D MMM YYYY')
                 </div>
               </div>
 
-              <!-- <FormField v-slot="{ componentField }" name="phone">
-                <FormItem v-auto-animate>
-                  <FormLabel class="text-blue-900">Phone Number</FormLabel>
-                  <FormControl>
-                    <vue-tel-input
-                      mode="international"
-                      id="phone"
-                      type="tel"
-                      placeholder="Phone Number"
-                      class="focus-visible:ring-blue-600"
-                      v-bind="componentField"
-                    >
-                    </vue-tel-input>
-                  </FormControl>
-
-                  <FormMessage for="phone" />
-                </FormItem>
-              </FormField> -->
+            
               <FormField v-slot="{ componentField }" name="type">
                 <FormItem>
                   <FormLabel>Admin Type</FormLabel>

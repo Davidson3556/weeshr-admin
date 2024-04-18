@@ -375,6 +375,8 @@ onMounted(async () => {
               <TableHead>Onboarded</TableHead>
               <TableHead> Delivery Rate</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead></TableHead>
+
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -391,6 +393,11 @@ onMounted(async () => {
                   {{ user.disabled ? 'Inactive' : 'Active' }}
                 </button>
               </TableCell>
+              <TableCell>
+        <svg width="20" height="50" viewBox="0 0 20 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7 31L12.5118 26.0606C13.1627 25.4773 13.1627 24.5227 12.5118 23.9394L7 19" stroke="#54586D" stroke-opacity="0.8" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</TableCell>
               
             </TableRow>
           </TableBody>
