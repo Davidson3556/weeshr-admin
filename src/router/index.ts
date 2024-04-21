@@ -38,10 +38,27 @@ const routes = [
   {
     path: '/user',
     name: 'user',
-    component: user,
+    component: () => import('../views/UserHub.vue'),
     meta: { requiresAuth: true }
   },
-
+  {
+    path: '/user/appuser',
+    name: 'appuser',
+    component: () => import('../views/AppUsers.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/user/vendors',
+    name: 'vendors',
+    component: () => import('../views/Vendors.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/user/admin',
+    name: 'admin',
+    component: () => import('../views/Admin.vue'),
+    meta: { requiresAuth: true }
+  },
   {
     path: '/create-user',
     name: 'create-user',
