@@ -93,8 +93,6 @@ const logout = async () => {
 <style scoped>
 @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
 
-
-
 .nav-Icon {
   width: auto;
   transform: rotate(-90deg); /* Initial rotation */
