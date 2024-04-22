@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Overview from '@/components/UseOverview.vue'
-import DateRangePicker from '@/components/DateRangePicker.vue'
 import MainNav from '@/components/MainNav.vue'
 
 import { Button } from '@/components/ui/button'
@@ -15,13 +14,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
     </div>
 
     <div class="flex-1 space-y-4 p-8 pt-6 bg-[#F8F9FFB2]">
-      <div class="flex flex-col items-center justify-between space-y-2 sm:flex-row">
-        <h2 class="text-3xl font-bold tracking-tight text-blue-900"></h2>
-        <div class="flex items-center space-x-2">
-          <DateRangePicker />
-          <Button>Download</Button>
-        </div>
-      </div>
       <Tabs default-value="overview" class="space-y-4">
         <TabsList class="text-blue-900">
           <TabsTrigger value="overview" class="text-blue-900 active:text-blue-900">
